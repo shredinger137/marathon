@@ -55,8 +55,11 @@ app.get("/userdata", function (req, res) {
     if (req && req.query && req.query.user) {
         var id = req.query.user;
         getUserData(id).then(result => {
-            console.log(result);
-            res.send(result);
+            if(result){
+                res.send(result);
+            } else {
+                res.send("id_not_found");
+            }           
         })
     } else { res.send("Invalid query"); }
 });
@@ -75,6 +78,9 @@ app.get("/updateprogress", function (req, res) {
         .then(data => {
             progressData = data.progress;
             progressData[date] = distance;
+            if(distance == 0){
+                delete progressData[date];
+            }
 
             mongo.connect(
                 mongourl,

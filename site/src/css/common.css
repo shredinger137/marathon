@@ -1,15 +1,19 @@
 p, span, h1, h2, h3, h4, button, label {
     color: white;
     font-family: Merriweather,sans-serif;
-    font-size: 2rem;
+}
+
+p, span {
+    font-size: 1.2rem;
 }
 
 body {
     background-color: #212121;
 }
 
+
 .strongText {
-    font-size: 1.2rem;
+    font-size: 1.9rem;
 }
 
 .main {
@@ -23,12 +27,12 @@ body {
 input {
     background-color: #c9c9c9;
     margin-right: 10px;
+    
 }
 
-.button1 {
+button {
     background-color: black;
     display: inline-block;
-    padding: 0.35em 1.2em;
     border: 0.1em solid #FFFFFF;
     margin:0 0.3em 0.3em 0;
     border-radius:0.12em;
@@ -38,6 +42,8 @@ input {
     text-align: center;
     transition: all 0.2s;
 }
+
+
 
 .disabled {
     pointer-events: none;

@@ -45,7 +45,7 @@ class Dashboard extends React.Component {
         document.getElementById("addMiles").value = "";
         var newDate = document.getElementById("date").value;
         this.initDate();
-        axios.get(`${config.api}/updateprogress?user=${this.state.id}&distance=${newMiles}&date=${newDate}`)
+        axios.get(`${config.api}/updateprogress?user=${this.state.id}&distance=${newMiles}&date=${newDate}`).then(res => this.getID())
     }
 
     getID() {
@@ -54,17 +54,23 @@ class Dashboard extends React.Component {
             var id = params.get("id");
             this.setState({ id: id });
             axios.get(`${config.api}/userdata?user=${id}`).then(res => {
-                this.setState({ userData: res.data });
-                console.log(res.data);
-                var progressArrayDates = Object.keys(res.data.progress);
-                var progressArray = [];
-                for (var progressDate in this.state.userData.progress) {
-                    progressArray.push([progressDate, this.state.userData.progress[progressDate]])
-                }
-                console.log(progressArray);
+                if (res.data != "id_not_found") {
+                    this.setState({ userData: res.data });
+                    console.log(res.data);
+                    var progressArrayDates = Object.keys(res.data.progress);
+                    var progressArray = [];
+                    for (var progressDate in this.state.userData.progress) {
+                        progressArray.push([progressDate, this.state.userData.progress[progressDate]])
+                    }
+                } else { this.handleNotFound(); }
 
             })
         } else { console.log("id not found"); }
+    }
+
+    handleNotFound() {
+        document.getElementById("notFound").style.display = "block";
+        document.getElementById("updateMilesForm").style.display = "none";
     }
 
     render() {
@@ -73,26 +79,29 @@ class Dashboard extends React.Component {
 
         return (
             <div className="App">
-                <header className="App-header">
-                    <h1>Dashboard</h1>
-                    <form onSubmit={this.handleAddMiles.bind(this)}>
-                        <input id="addMiles"></input>
-                        <input id="date" type="date"></input>
-                        <button type="submit">Submit</button>
-                    </form>
-                    <br />
-                    <br />
-                    <div></div>
-                    {Object.keys(this.state.userData.progress).map(
-                        date => (
-                            <div>
-                                <span>{date}:{"  "}</span><span>{"  "}{this.state.userData.progress[date]} Miles</span>
-                            </div>
-                        )
+                <h1>Dashboard</h1>
+                <div>
+                
+                <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
+                    <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label><input id="addMiles"></input>
+                    <label htmlFor="date"><span>Date:{" "}</span></label>
+                    <input id="date" type="date"></input>
+                    <br/>
+                    <button type="submit">Submit</button>
+                </form>
+                <br />
+                <br />
+                <div></div>
+                {Object.keys(this.state.userData.progress).map(
+                    date => (
+                        <div>
+                            <span>{date.replace("2020-", "")}:{"  "}</span><span>{"  "}{this.state.userData.progress[date]} Miles</span>
+                        </div>
+                    )
 
-                    )}
-                    <p>User: {this.state.userData.email}</p>
-                </header>
+                )}
+                <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
+            </div>
             </div>
         );
     }

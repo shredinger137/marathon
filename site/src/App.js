@@ -22,7 +22,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
+        <h1>Skate the Bay</h1>
           <BrowserRouter>
             <div>
               <Switch>
@@ -35,7 +35,6 @@ class App extends React.Component {
               </Switch>
               </div>
           </BrowserRouter>
-        </header>
       </div>
     );
   }
