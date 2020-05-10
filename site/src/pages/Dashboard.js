@@ -16,6 +16,7 @@ class Dashboard extends React.Component {
         userData: {
             progress: {}
         },
+        progressTotal: 0,
         id: ""
     };
 
@@ -57,11 +58,18 @@ class Dashboard extends React.Component {
                 if (res.data != "id_not_found") {
                     this.setState({ userData: res.data });
                     console.log(res.data);
-                    var progressArrayDates = Object.keys(res.data.progress);
                     var progressArray = [];
+                    var total = 0;
                     for (var progressDate in this.state.userData.progress) {
                         progressArray.push([progressDate, this.state.userData.progress[progressDate]])
+                        total = total + parseInt(this.state.userData.progress[progressDate]);
                     }
+                    var totalPercent = (total / 155) * 100;
+                    console.log(total);
+                    console.log(totalPercent);
+                    if(totalPercent > 100){ totalPercent = 100 }
+    
+                    this.setState({progressTotal: totalPercent});
                 } else { this.handleNotFound(); }
 
             })
@@ -81,27 +89,32 @@ class Dashboard extends React.Component {
             <div className="App">
                 <h1>Dashboard</h1>
                 <div>
-                
-                <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
-                    <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label><input id="addMiles"></input>
-                    <label htmlFor="date"><span>Date:{" "}</span></label>
-                    <input id="date" type="date"></input>
-                    <br/>
-                    <button type="submit">Submit</button>
-                </form>
-                <br />
-                <br />
-                <div></div>
-                {Object.keys(this.state.userData.progress).map(
-                    date => (
-                        <div>
-                            <span>{date.replace("2020-", "")}:{"  "}</span><span>{"  "}{this.state.userData.progress[date]} Miles</span>
-                        </div>
-                    )
+                    <div id="progress">
 
-                )}
-                <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
-            </div>
+                        <div id="progressBar" style={{width: this.state.progressTotal + "%"}}><span>{Math.floor(100 * this.state.progressTotal) / 100} / 155</span></div>
+                    </div>
+                    <br />
+                    <br />
+                    <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
+                        <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label><input id="addMiles"></input>
+                        <label htmlFor="date"><span>Date:{" "}</span></label>
+                        <input id="date" type="date"></input>
+                        <br />
+                        <button type="submit">Submit</button>
+                    </form>
+                    <br />
+                    <br />
+                    <div></div>
+                    {Object.keys(this.state.userData.progress).map(
+                        date => (
+                            <div>
+                                <span>{date.replace("2020-", "")}:{"  "}</span><span>{"  "}{this.state.userData.progress[date]} Miles</span>
+                            </div>
+                        )
+
+                    )}
+                    <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
+                </div>
             </div>
         );
     }
