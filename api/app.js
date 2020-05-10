@@ -60,6 +60,46 @@ app.get("/userdata", function (req, res) {
     } else { res.send("Invalid query"); }
 });
 
+app.get("/updateprogress", function (req, res) {
+
+    if (req.headers.origin && req.headers.origin != undefined) {
+        var origin = req.headers.origin;
+        if (allowedOrigins.indexOf(origin) > -1) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+        }
+
+    } else { res.setHeader('Access-Control-Allow-Origin', 'https://marathon.rrderby.org'); }
+    res.setHeader("Content-Type", "text/plain");
+
+    var progressData;
+    var id = req.query.user;
+    var distance = req.query.distance;
+    var date = req.query.date;
+    getUserData(id)
+        .then(data => {
+            progressData = data.progress;
+            progressData[date] = distance;
+
+            mongo.connect(
+                mongourl,
+                { useNewUrlParser: true, useUnifiedTopology: true },
+                function (err, db) {
+                  if (err) throw err;
+                  var dbo = db.db("marathon");
+                  dbo.collection("users").updateOne({ ID: id }, { $set: { progress: progressData } }, function (err, result) {
+                    if (err) throw err;
+                    else {
+                      res.send("200");
+                    }
+                    db.close();
+                  }
+                  );
+                });
+
+        })
+    console.log(id + distance + date);
+
+});
 
 
 async function getUserData(id) {

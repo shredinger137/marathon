@@ -3,6 +3,7 @@
 # dependencies
 node_modules
 build
+*config.js*
 
 # misc
 .DS_Store
