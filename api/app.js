@@ -1,7 +1,7 @@
 var mongo = require("mongodb");
 var express = require("express");
 var app = express();
-var allowedOrigins = ["https://marathon.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000", "http://127.0.0.1:3000"];
+var allowedOrigins = ["https://marathon.rrderby.org", "http://marathon.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000", "http://127.0.0.1:3000"];
 var mongourl = "mongodb://localhost:27017";
 
 
@@ -13,13 +13,7 @@ var mongourl = "mongodb://localhost:27017";
 
 app.get("/signup", function (req, res) {
 
-    if (req.headers.origin && req.headers.origin != undefined) {
-        var origin = req.headers.origin;
-        if (allowedOrigins.indexOf(origin) > -1) {
-            res.setHeader('Access-Control-Allow-Origin', origin);
-        }
-
-    } else { res.setHeader('Access-Control-Allow-Origin', 'https://marathon.rrderby.org'); }
+    res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
 
     if (req && req.query && req.query.email) {
@@ -42,13 +36,7 @@ app.get("/signup", function (req, res) {
 
 app.get("/userdata", function (req, res) {
 
-    if (req.headers.origin && req.headers.origin != undefined) {
-        var origin = req.headers.origin;
-        if (allowedOrigins.indexOf(origin) > -1) {
-            res.setHeader('Access-Control-Allow-Origin', origin);
-        }
-
-    } else { res.setHeader('Access-Control-Allow-Origin', 'https://marathon.rrderby.org'); }
+    res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
 
     if (req && req.query && req.query.user) {
@@ -62,13 +50,7 @@ app.get("/userdata", function (req, res) {
 
 app.get("/updateprogress", function (req, res) {
 
-    if (req.headers.origin && req.headers.origin != undefined) {
-        var origin = req.headers.origin;
-        if (allowedOrigins.indexOf(origin) > -1) {
-            res.setHeader('Access-Control-Allow-Origin', origin);
-        }
-
-    } else { res.setHeader('Access-Control-Allow-Origin', 'https://marathon.rrderby.org'); }
+    res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
 
     var progressData;
