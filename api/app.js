@@ -48,6 +48,7 @@ app.get("/userdata", function (req, res) {
     } else { res.send("Invalid query"); }
 });
 
+
 app.get("/updateprogress", function (req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
