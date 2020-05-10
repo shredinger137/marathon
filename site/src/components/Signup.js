@@ -52,7 +52,7 @@ class Signup extends React.Component {
           </form>
           <br />
           <br />
-          <div id="emailSent" style={{display: "none"}}><p>Your registartion was received. Please check your email for a confirmation and link to your dashboard.</p></div>
+          <div id="emailSent" style={{display: "none"}}><p>Your registration was received. Please check your email for a confirmation and link to your dashboard.</p></div>
           <div id="error" style={{display: "none"}}><p>An error occured. Please try again later. If it continues, email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a>.</p></div>
       </div>
     );

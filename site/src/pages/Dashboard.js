@@ -17,6 +17,7 @@ class Dashboard extends React.Component {
             progress: {}
         },
         progressTotal: 0,
+        progressTotalPercent: 0,
         id: ""
     };
 
@@ -64,12 +65,14 @@ class Dashboard extends React.Component {
                         progressArray.push([progressDate, this.state.userData.progress[progressDate]])
                         total = total + parseInt(this.state.userData.progress[progressDate]);
                     }
-                    var totalPercent = (total / 155) * 100;
+                    var totalPercent = Math.floor((total / 155) * 10000) / 100;
                     console.log(total);
                     console.log(totalPercent);
                     if(totalPercent > 100){ totalPercent = 100 }
+                    if(totalPercent < 1){this.document.getElementById("progressText").style.display = "none";}
     
-                    this.setState({progressTotal: totalPercent});
+                    this.setState({progressTotal: total,
+                                    progressTotalPercent: totalPercent});
                 } else { this.handleNotFound(); }
 
             })
@@ -80,7 +83,7 @@ class Dashboard extends React.Component {
         document.getElementById("notFound").style.display = "block";
         document.getElementById("updateMilesForm").style.display = "none";
     }
-
+s
     render() {
 
 
@@ -91,7 +94,7 @@ class Dashboard extends React.Component {
                 <div>
                     <div id="progress">
 
-                        <div id="progressBar" style={{width: this.state.progressTotal + "%"}}><span>{Math.floor(100 * this.state.progressTotal) / 100} / 155</span></div>
+                        <div id="progressBar" style={{width: this.state.progressTotalPercent + "%"}}><span id="progressText">{this.state.progressTotal} / 155</span></div>
                     </div>
                     <br />
                     <br />
