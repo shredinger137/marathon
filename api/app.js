@@ -3,6 +3,18 @@ var express = require("express");
 var app = express();
 var allowedOrigins = ["https://marathon.rrderby.org", "http://marathon.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000", "http://127.0.0.1:3000"];
 var mongourl = "mongodb://localhost:27017";
+var nodemailer = require("nodemailer");
+var config = require("./config.js");
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: config.emailUsername,
+        pass: config.emailPass
+    }
+});
+
+
 
 
 //*****************
@@ -24,7 +36,8 @@ app.get("/signup", function (req, res) {
             console.log(checkResult);
             if (checkResult == true) {
                 addNewUserToDatabase(userEmail, userDisplayName, id);
-                sendEmailToUser(userEmail, id);
+                var content = createWelcomeEmail(id);
+                sendEmailToUser(userEmail, "Welcome to Skate the Bay", content);
                 res.send(id);
             }
             else {
@@ -67,16 +80,16 @@ app.get("/updateprogress", function (req, res) {
                 mongourl,
                 { useNewUrlParser: true, useUnifiedTopology: true },
                 function (err, db) {
-                  if (err) throw err;
-                  var dbo = db.db("marathon");
-                  dbo.collection("users").updateOne({ ID: id }, { $set: { progress: progressData } }, function (err, result) {
                     if (err) throw err;
-                    else {
-                      res.send("200");
+                    var dbo = db.db("marathon");
+                    dbo.collection("users").updateOne({ ID: id }, { $set: { progress: progressData } }, function (err, result) {
+                        if (err) throw err;
+                        else {
+                            res.send("200");
+                        }
+                        db.close();
                     }
-                    db.close();
-                  }
-                  );
+                    );
                 });
 
         })
@@ -97,6 +110,32 @@ function recoverID(email) {
 
 }
 
+function createWelcomeEmail(id){
+    var content = `<h3>Welcome to the Skate the Bay Marathon!</h3>
+                    <br /><br />
+                    <p>Your unique dashboard link is: <a href="https://marathon.rrderby.org/dashboard?id=${id}">https://marathon.rrderby.org/dashboard?id=${id}</a>. Use this link to view
+                    and update your progress.</p>
+        `
+    return content;
+}
+
+
+function sendEmailToUser(emailAddress, subject, content) {
+    const mailOptions = {
+        from: config.emailUsername,
+        to: emailAddress,
+        subject: subject,
+        html: content
+    };
+
+    transporter.sendMail(mailOptions, function (err, info) {
+        if (err)
+            console.log(err)
+        else
+            console.log(info);
+    });
+}
+
 
 //TODO: Maybe todo. This doesn't check ID, but it's random enough that I'd be surprised if this became an issue
 async function checkUserData(id, userEmail) {
@@ -106,10 +145,6 @@ async function checkUserData(id, userEmail) {
     if (results.length > 0) {
         return false;
     } else { return true; }
-}
-
-function sendEmailToUser(userEmail, id) {
-
 }
 
 
