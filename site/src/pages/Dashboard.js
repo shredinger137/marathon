@@ -69,7 +69,7 @@ class Dashboard extends React.Component {
                     console.log(total);
                     console.log(totalPercent);
                     if(totalPercent > 100){ totalPercent = 100 }
-                    if(totalPercent < 1){this.document.getElementById("progressText").style.display = "none";}
+                    if(totalPercent < 1){document.getElementById("progressText").style.display = "none";}
     
                     this.setState({progressTotal: total,
                                     progressTotalPercent: totalPercent});
