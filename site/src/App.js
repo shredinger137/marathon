@@ -1,26 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './css/common.css'
+import { Route, Switch } from "react-router-dom";
+import axios from 'axios';
+import { config } from "./config.js";
+import './components/Signup';
+import Signup from './components/Signup';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          DEPLOY TEST
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+
+  }
+
+  state = {
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <Signup />
+
+        </header>
+      </div>
+    );
+  }
 }
 
 export default App;
