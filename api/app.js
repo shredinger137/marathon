@@ -28,11 +28,11 @@ app.get("/signup", function (req, res) {
         var id = Math.random().toString(36).slice(2);
         checkUserData(id, userEmail).then(checkResult => {
             console.log(checkResult);
-            if(checkResult == true){
+            if (checkResult == true) {
                 addNewUserToDatabase(userEmail, userDisplayName, id);
                 sendEmailToUser(userEmail, id);
                 res.send(id);
-            } 
+            }
             else {
                 res.send("oop");
             }
@@ -53,59 +53,44 @@ app.get("/userdata", function (req, res) {
 
     if (req && req.query && req.query.user) {
         var id = req.query.user;
-        getUserData(id).then(results => {
-            res.send(results);
+        getUserData(id).then(result => {
+            console.log(result);
+            res.send(result);
         })
-    } else {res.send("Invalid query");}
+    } else { res.send("Invalid query"); }
 });
 
-function getUserData(id){
-    mongo.connect(
-        mongourl,
-        { useNewUrlParser: true, useUnifiedTopology: true },
-        function (err, db) {
-          if (err) throw err;
-          var dbo = db.db("marathon");
-          dbo
-            .collection("users")
-            .findOne({"id": userEmail}, function (err, result) {
-              if (err) {
-                console.log(err);
-              }
-              if (result) {
-                  if(result.length && result.length > 0){
-                      return false;
-                  } else {
-                      return true;
-                  }
-              }
-            }
-          );
-        }
-      );
-}
-
-function recoverID(email){
-
-}
 
 
-//TODO: Maybe todo. This doesn't check ID, but 52 bit entropy means we're probably okay.
-async function checkUserData(id, userEmail){
+async function getUserData(id) {
     var db = await mongo.connect(mongourl);
     var dbo = db.db("marathon");
-    var results = await dbo.collection("users").find({email: userEmail}).toArray();
-    if(results.length > 0){
+    return await dbo.collection("users").findOne({ ID: id });
+
+}
+
+
+function recoverID(email) {
+
+}
+
+
+//TODO: Maybe todo. This doesn't check ID, but it's random enough that I'd be surprised if this became an issue
+async function checkUserData(id, userEmail) {
+    var db = await mongo.connect(mongourl);
+    var dbo = db.db("marathon");
+    var results = await dbo.collection("users").find({ email: userEmail }).toArray();
+    if (results.length > 0) {
         return false;
-    } else {return true;}
+    } else { return true; }
 }
 
-function sendEmailToUser(userEmail, id){
+function sendEmailToUser(userEmail, id) {
 
 }
 
 
-function updateProgress(){
+function updateProgress() {
 
 }
 
@@ -132,7 +117,7 @@ function addNewUserToDatabase(userEmail, userDisplayName, userID, options) {
             dbo.collection("users").insertOne(userData, function (err, result) {
                 if (err) throw err;
                 else {
-               
+
 
                 }
                 db.close();
