@@ -4,6 +4,9 @@
 node_modules
 build
 *config.js*
+config*
+config.js
+App.js
 
 # misc
 .DS_Store
