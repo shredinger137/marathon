@@ -65,6 +65,7 @@ class Dashboard extends React.Component {
                         progressArray.push([progressDate, this.state.userData.progress[progressDate]])
                         total = total + parseFloat(this.state.userData.progress[progressDate]);
                     }
+                    total = Math.floor(total * 1000) / 1000;
                     var totalPercent = Math.floor((total / 155) * 10000) / 100;
                     console.log(total);
                     console.log(totalPercent);
@@ -100,7 +101,9 @@ s
                     <br />
                     <br />
                     <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
-                        <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label><input id="addMiles"></input>
+                        <p>Enter the distance you've skated and the date you did it (it should already have today's date) to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
+                        <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label>
+                        <input id="addMiles"></input>
                         <label htmlFor="date"><span>Date:{" "}</span></label>
                         <input id="date" type="date"></input>
                         <br />
