@@ -14,11 +14,14 @@ class Dashboard extends React.Component {
 
     state = {
         userData: {
-            progress: {}
+            progress: {},
+            marathon: "bridging"
         },
         progressTotal: 0,
         progressTotalPercent: 0,
-        id: ""
+        id: "",
+        marathonDistance: 42,
+        marathonName: ""
     };
 
     componentDidMount() {
@@ -56,7 +59,18 @@ class Dashboard extends React.Component {
             var id = params.get("id");
             this.setState({ id: id });
             axios.get(`${config.api}/userdata?user=${id}`).then(res => {
-                if (res.data != "id_not_found") {
+                if (res && res.data && res.data != "id_not_found") {
+
+                    if (res.data.marathon == "bridging") {
+                        this.setState({ marathonDistance: 42, marathonName: "Bridging!" });
+                    }
+                    if (res.data.marathon == "fullBay") {
+                        this.setState({ marathonDistance: 155, marathonName: "Full Bay" });
+                    }
+                    if (res.data.marathon == "mini") {
+                        this.setState({ marathonDistance: 3.4, marathonName: "Mini Marathon" });
+                    }
+
                     this.setState({ userData: res.data });
                     console.log(res.data);
                     var progressArray = [];
@@ -66,7 +80,7 @@ class Dashboard extends React.Component {
                         total = total + parseFloat(this.state.userData.progress[progressDate]);
                     }
                     total = Math.floor(total * 1000) / 1000;
-                    var totalPercent = Math.floor((total / 155) * 10000) / 100;
+                    var totalPercent = Math.floor((total / this.state.marathonDistance) * 10000) / 100;
                     console.log(total);
                     console.log(totalPercent);
                     if (totalPercent > 100) { totalPercent = 100 }
@@ -87,7 +101,17 @@ class Dashboard extends React.Component {
         document.getElementById("notFound").style.display = "block";
         document.getElementById("updateMilesForm").style.display = "none";
     }
-    s
+    
+    handleUpdateMarathon(event) {
+        event.preventDefault();
+        var newMarathonShortname = document.getElementById("marathon").value;
+        axios.get(`${config.api}/updatemarathon?user=${this.state.id}&marathon=${newMarathonShortname}`).then(res => {
+            this.getID();
+            console.log(res);
+        });
+    }
+
+
     render() {
 
 
@@ -97,12 +121,12 @@ class Dashboard extends React.Component {
                 <h1>Dashboard</h1>
                 <div>
                     <div id="progress">
-
-                        <div id="progressBar" style={{ width: this.state.progressTotalPercent + "%"}}>
-                            <span id="progressText" style={{width: "50vw"}}>{this.state.progressTotal} / 155</span>
+                        <div id="progressBar" style={{ width: this.state.progressTotalPercent + "%" }}>
+                            <span id="progressText" style={{ width: "50vw" }}>{this.state.progressTotal} / {this.state.marathonDistance}</span>
                         </div>
                     </div>
                     <br />
+                    <span>Your Marathon: {this.state.marathonName} ({this.state.marathonDistance} miles)</span>
                     <br />
                     <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
                         <p>Enter the distance you've skated and the date you did it (it should already have today's date) to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
@@ -114,9 +138,19 @@ class Dashboard extends React.Component {
                         <button type="submit">Submit</button>
                     </form>
                     <br />
+                    <form id="updateMarathon" onSubmit={this.handleUpdateMarathon.bind(this)}>
+                        <label htmlFor="marathon">Change Marathon: </label>
+                        <select id="marathon" defaultValue={this.state.userData.marathon}>
+                            <option value="fullBay">Full Bay (155 miles)</option>
+                            <option value="bridging">Bridging (42 miles)</option>
+                            <option value="mini">Mini Marathon (3.4 miles)</option>
+                        </select>
+                        <button type="submit">Save</button>
+                    </form>
+                    <br />
                     <br />
                     <div>
-                        <span>Total: {this.state.progressTotal} / 155 Miles</span>
+                        <span>Total: {this.state.progressTotal} / {this.state.marathonDistance}{" "} Miles</span>
                         <br /><br />
                     </div>
                     {Object.keys(this.state.userData.progress).map(

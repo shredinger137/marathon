@@ -31,11 +31,12 @@ app.get("/signup", function (req, res) {
     if (req && req.query && req.query.email) {
         var userEmail = req.query.email;
         var userDisplayName = req.query.name;
+        var marathonSelection = req.query.marathon;
         var id = Math.random().toString(36).slice(2);
         checkUserData(id, userEmail).then(checkResult => {
             console.log(checkResult);
             if (checkResult == true) {
-                addNewUserToDatabase(userEmail, userDisplayName, id);
+                addNewUserToDatabase(userEmail, userDisplayName, marathonSelection, id);
                 var content = createWelcomeEmail(id);
                 sendEmailToUser(userEmail, "Welcome to Skate the Bay", content);
                 res.send(id);
@@ -61,6 +62,33 @@ app.get("/userdata", function (req, res) {
                 res.send("id_not_found");
             }           
         })
+    } else { res.send("Invalid query"); }
+});
+
+app.get("/updatemarathon", function (req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "text/plain");
+
+    if (req && req.query && req.query.user && req.query.marathon) {
+        var id = req.query.user;
+        var marathon = req.query.marathon;
+        
+        mongo.connect(
+            mongourl,
+            { useNewUrlParser: true, useUnifiedTopology: true },
+            function (err, db) {
+                if (err) throw err;
+                var dbo = db.db("marathon");
+                dbo.collection("users").updateOne({ ID: id }, { $set: { marathon: marathon } }, function (err, result) {
+                    if (err) throw err;
+                    else {
+                        res.send("200");
+                    }
+                    db.close();
+                }
+                );
+            });
     } else { res.send("Invalid query"); }
 });
 
@@ -161,11 +189,12 @@ function updateProgress() {
 //TODO: This currently doesn't have any validation, including if users are already signed up.
 //Not sure if we care about that, but we probably do care about bot signups and the like.
 
-function addNewUserToDatabase(userEmail, userDisplayName, userID, options) {
+function addNewUserToDatabase(userEmail, userDisplayName, marathon, userID, options) {
     var userData = {
         email: userEmail,
         name: userDisplayName,
         ID: userID,
+        marathon: marathon,
         progress: {}
     }
 
