@@ -34,6 +34,7 @@ class Achievements extends React.Component {
     //The key should be the mile marker? 
 
     getAllBadges() {
+        this.setState({ showNextBadge: false })
         console.log(this.props);
 
         var gotNextBadge = false;
@@ -46,27 +47,29 @@ class Achievements extends React.Component {
         if (this.props.marathon == "bridging") {
             var list = badgeData.bridging;
         }
-        if (this.props.marathon == "full") {
+        if (this.props.marathon == "fullBay") {
             var list = badgeData.full;
         }
+        console.log(Array.isArray(list));
+        if (list && Array.isArray(list) == true) {
+            for (var badge of list) {
 
-        for (var badge of list) {
+                //each 'badge' is an object
+                //each one has keys name, desc, image, mile
 
-            //each 'badge' is an object
-            //each one has keys name, desc, image, mile
-
-            if (badge.mile && badge.mile <= this.props.miles) {
-                allBadges.push(badge);
-            } else {
-                if (gotNextBadge == false) {
-                    this.setState({ nextBadge: badge, showNextBadge: true });
-                    gotNextBadge = true;
-                    break;
+                if (badge.mile && badge.mile <= this.props.miles) {
+                    allBadges.push(badge);
+                } else {
+                    if (gotNextBadge == false) {
+                        this.setState({ nextBadge: badge, showNextBadge: true });
+                        gotNextBadge = true;
+                        break;
+                    }
                 }
+                this.setState({ badges: allBadges });
+
+
             }
-            this.setState({ badges: allBadges });
-
-
         }
     }
 
