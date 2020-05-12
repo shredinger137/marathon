@@ -65,6 +65,33 @@ app.get("/userdata", function (req, res) {
     } else { res.send("Invalid query"); }
 });
 
+app.get("/resend", function (req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "text/plain");
+
+    if (req && req.query && req.query.email) {
+        var email = req.query.email;
+        mongo.connect(
+            mongourl,
+            { useNewUrlParser: true, useUnifiedTopology: true },
+            function (err, db) {
+                if (err) throw err;
+                var dbo = db.db("marathon");
+                dbo.collection("users").findOne({email: email}, function (err, result) {
+                    if (err) throw err;
+                    else {
+                        db.close();
+                        var content = createWelcomeEmail(result.ID);
+                        sendEmailToUser(email, "Skate the Bay Dashboard Link", content);
+                        res.send(result.ID);
+                    }         
+                }
+                );
+            });
+    } else { res.send("Invalid query"); }
+});
+
 app.get("/updatemarathon", function (req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -73,7 +100,6 @@ app.get("/updatemarathon", function (req, res) {
     if (req && req.query && req.query.user && req.query.marathon) {
         var id = req.query.user;
         var marathon = req.query.marathon;
-        
         mongo.connect(
             mongourl,
             { useNewUrlParser: true, useUnifiedTopology: true },
@@ -139,10 +165,6 @@ async function getUserData(id) {
 
 }
 
-
-function recoverID(email) {
-
-}
 
 function createWelcomeEmail(id){
     var content = `<h3>Welcome to the Skate the Bay Marathon!</h3>
