@@ -7,6 +7,12 @@ export const badgeData = {
             desc: "Began any marathon."
         },
         {
+            mile: 1.7,
+            image: "fog.png",
+            name: "Halfway",
+            desc: "Couldn't see anything because of the fog."
+        },
+        {
             mile: 3.4,
             image: "finished.png",
             name: "Finisher",
