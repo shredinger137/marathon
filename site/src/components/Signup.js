@@ -89,7 +89,7 @@ class Signup extends React.Component {
         <br /><br />
         <img src={route}></img>
         <br /><br />
-        <p>Having problems? Email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> or post in our Facebook group to get help or report bugs.</p>
+        <p>Having problems? Email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> or post in our Facebook group to get help.</p>
       </div>
     );
   }
