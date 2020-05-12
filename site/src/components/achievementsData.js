@@ -6,6 +6,12 @@ export const badgeData = {
             name: "Bridge Roller",
             desc: "Began any marathon."
         },
+        {
+            mile: 3.4,
+            image: "finished.png",
+            name: "Finisher",
+            desc: "Finished a marathon."
+        },
 
     ],
 
@@ -34,7 +40,13 @@ export const badgeData = {
             image: "jailer.png",
             name: "The Jailer",
             desc: "Stopped by San Quentin State Prison after crossing the Richmond Bridge."
-        }
+        },
+        {
+            mile: 42,
+            image: "finished.png",
+            name: "Finisher",
+            desc: "Finished a marathon."
+        },
 
     ],
 
@@ -82,6 +94,13 @@ export const badgeData = {
             name: "Riveter",
             desc: "Visited the Rosie the Riveter Museum."
         },
+        {
+            mile: 155,
+            image: "finished.png",
+            name: "Finisher",
+            desc: "Finished a marathon."
+        },
+
 
 
 
