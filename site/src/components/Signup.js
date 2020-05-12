@@ -1,9 +1,9 @@
 import React from 'react';
 import '../App.css';
 import '../css/common.css'
-import { Route, Switch } from "react-router-dom";
 import axios from 'axios';
 import { config } from "../config.js";
+var route = require('../img/route.jpg');
 
 //This has turned into a front page. Apparently
 //it's not a form component anymore. Oh well.
@@ -86,6 +86,9 @@ class Signup extends React.Component {
           </p>
         </div>
         <div id="error" style={{ display: "none" }}><p>An error occured. Please try again later. If it continues, email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a>.</p></div>
+        <br /><br />
+        <img src={route}></img>
+        <br /><br />
       </div>
     );
   }
