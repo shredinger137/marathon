@@ -54,7 +54,7 @@ class Signup extends React.Component {
           to find yours.
           <br />
             <br />
-          To sign up through our site, enter your email and name below, selecting your preffered route. You'll get an email link to your personal dashboard where you can update miles and see
+          To sign up through our site, enter your email and name below, selecting your preferred route. You'll get an email link to your personal dashboard where you can update miles and see
           your progress. Join our <a href="https://www.facebook.com/groups/193465021655844/" target="_new">Facebook group</a> and tag your photos with #SkateTheBay to share with other participants.
           </p>
         </div>
