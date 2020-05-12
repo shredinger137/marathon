@@ -15,7 +15,8 @@ class Dashboard extends React.Component {
     state = {
         userData: {
             progress: {},
-            marathon: "bridging"
+            marathon: "bridging",
+            name: ""
         },
         progressTotal: 0,
         progressTotalPercent: 0,
@@ -101,7 +102,7 @@ class Dashboard extends React.Component {
         document.getElementById("notFound").style.display = "block";
         document.getElementById("updateMilesForm").style.display = "none";
     }
-    
+
     handleUpdateMarathon(event) {
         event.preventDefault();
         var newMarathonShortname = document.getElementById("marathon").value;
@@ -119,6 +120,7 @@ class Dashboard extends React.Component {
         return (
             <div className="App">
                 <h1>Dashboard</h1>
+                <h3>{this.state.userData.name}</h3>
                 <div>
                     <div id="progress">
                         <div id="progressBar" style={{ width: this.state.progressTotalPercent + "%" }}>
