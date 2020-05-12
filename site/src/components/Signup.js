@@ -5,6 +5,8 @@ import { Route, Switch } from "react-router-dom";
 import axios from 'axios';
 import { config } from "../config.js";
 
+//This has turned into a front page. Apparently
+//it's not a form component anymore. Oh well.
 
 class Signup extends React.Component {
   constructor(props) {
@@ -40,24 +42,38 @@ class Signup extends React.Component {
   render() {
     return (
       <div className="App">
+          <div className="introText">
+          <p>Skate the Bay is a virtual skate marathon hosted by <a href="https://rrderby.org" target="_new">Resurrection Roller Derby</a>, open to skaters everywhere.
+          The route comes in three types: Mini, which is equivalent to traveling across the Golden Gate Bridge and back; Bridging, which simulates going around the San Francisco Bay, 
+          across the Golden Gate, Richmond and Bay bridges; and the Full Bay, which goes around the San Francisco and San Pablo bays. There's no entry fee for participation, but we 
+          encourage any skaters who can to donate to their local food bank. You can visit <a href="https://www.feedingamerica.org/find-your-local-foodbank" target="_new">Feeding America</a>
+          to find yours.
+          <br />
+          <br />
+          To sign up through our site, enter your email and name below, selecting your preffered route. You'll get an email link to your personal dashboard where you can update miles and see
+          your progress. Join our <a href="https://www.facebook.com/groups/193465021655844/" target="_new">Facebook group</a> and tag your photos with #SkateTheBay to share with other participants.
+          </p>
+          </div>
+
           <h1>Sign Up</h1>
           <p>Enter your email, name (optional) and select your preferred marathon to sign up. The marathon choice can be changed later. You'll get an email with a link to your personal dashboard.</p>
           <form onSubmit={this.handleSignupSubmit}>
-            <label><span> Name:</span>
+            <label><span> Name:{" "}</span>
               <input type="text" id="name"/>
             </label>
             <br />
-            <label> <span>Email: </span>
+            <label> <span>Email:{" "}</span>
               <input type="email" id="email"></input>              
             </label>
-            <input type="submit" value="Submit" />
             <br />
-            <label><span>Marathon:</span>
+            <label><span>Marathon:{" "}</span>
             <select id="marathon" defaultValue="bridging">
               <option value="fullBay">Full Bay (155 miles)</option>
               <option value="bridging">Bridging (42 miles)</option>
               <option value="mini">Mini Marathon (3.4 miles)</option>  
             </select></label>
+            <br /><br />
+            <input type="submit" value="Submit" />
           </form>
           <br />
           <br />
