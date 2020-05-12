@@ -50,7 +50,7 @@ class Signup extends React.Component {
           <p>Skate the Bay is a virtual skate marathon hosted by <a href="https://rrderby.org" target="_new">Resurrection Roller Derby</a>, open to skaters everywhere.
           The route comes in three types: Mini, which is equivalent to traveling across the Golden Gate Bridge and back; Bridging, which simulates going around the San Francisco Bay,
           across the Golden Gate, Richmond and Bay bridges; and the Full Bay, which goes around the San Francisco and San Pablo bays. There's no entry fee for participation, but we
-          encourage any skaters who can to donate to their local food bank. You can visit <a href="https://www.feedingamerica.org/find-your-local-foodbank" target="_new">Feeding America</a>
+          encourage any skaters who can to donate to their local food bank. You can visit <a href="https://www.feedingamerica.org/find-your-local-foodbank" target="_new">Feeding America </a>
           to find yours.
           <br />
             <br />
