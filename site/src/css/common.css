@@ -98,8 +98,42 @@ tr {
     margin-bottom: 10px;
 }
 
+.badgeGrid {
+    margin: 0 auto;
+    width: 70vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 
-@media screen and (max-width: 992px) {
+}
+
+
+.badgeGrid div {
+    border-style: solid;
+    padding: 15px;
+}
+
+.badgeName {
+
+}
+
+.badgeDescription {
+    font-style: italic;
+    font-size: 1.1rem;
+
+}
+
+.nextBadge {
+    opacity: .3
+}
+
+@media screen and (max-width: 800px) {
+
+    .badgeGrid {
+        width: 95vw;
+        grid-template-columns: 1fr 1fr;
+    
+    }
+    
 
     .login {
         width: 90vw;

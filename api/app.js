@@ -167,10 +167,12 @@ async function getUserData(id) {
 
 
 function createWelcomeEmail(id){
-    var content = `<h3>Welcome to the Skate the Bay Marathon!</h3>
+    var content = `<p>Welcome to the Skate the Bay Marathon!</p>
                     <br /><br />
-                    <p>Your unique dashboard link is: <a href="https://marathon.rrderby.org/dashboard?id=${id}">https://marathon.rrderby.org/dashboard?id=${id}</a>. Use this link to view
-                    and update your progress.</p>
+                    <p>Thank you for signing up for Resurrection Roller Derby's Skate the Bay Virtual Marathon. Your unique dashboard link is: <a href="https://marathon.rrderby.org/dashboard?id=${id}">https://marathon.rrderby.org/dashboard?id=${id}</a>. Use this link to view
+                    and update your progress. Be sure to join our Facebook group and tag your photos/Tweets with #SkateTheBay to stay in touch with other skaters. </p>
+                    <br />
+                    <p>We're encouraging all participants to also get in contact with their local food banks to make donations. They are providing unprecedented support to our community, and we hope the roller derby and skating communities can help then succeed.</p>
         `
     return content;
 }

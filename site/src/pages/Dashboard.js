@@ -4,6 +4,7 @@ import '../css/common.css'
 import axios from 'axios';
 import '../components/Signup';
 import { config } from "../config.js";
+import Achievements from '../components/Achievements';
 
 
 class Dashboard extends React.Component {
@@ -73,7 +74,6 @@ class Dashboard extends React.Component {
                     }
 
                     this.setState({ userData: res.data });
-                    console.log(res.data);
                     var progressArray = [];
                     var total = 0;
                     for (var progressDate in this.state.userData.progress) {
@@ -82,11 +82,16 @@ class Dashboard extends React.Component {
                     }
                     total = Math.floor(total * 1000) / 1000;
                     var totalPercent = Math.floor((total / this.state.marathonDistance) * 10000) / 100;
-                    console.log(total);
-                    console.log(totalPercent);
                     if (totalPercent > 100) { totalPercent = 100 }
-                    if (totalPercent < 5) { document.getElementById("progressText").style.display = "none"; }
-                    else { document.getElementById("progressText").style.display = "block"; }
+                    if (totalPercent < 5) {
+                        if (document.getElementById("progressText") !== null) {
+                            document.getElementById("progressText").style.display = "none";
+                        }
+                    }
+                    else { 
+                        if (document.getElementById("progressText") !== null){
+                            document.getElementById("progressText").style.display = "block"; }
+                    }
 
                     this.setState({
                         progressTotal: total,
@@ -115,7 +120,7 @@ class Dashboard extends React.Component {
 
     render() {
 
-
+        console.log(this.state.progressTotal);
 
         return (
             <div className="App">
@@ -157,13 +162,17 @@ class Dashboard extends React.Component {
                     </div>
                     {Object.keys(this.state.userData.progress).map(
                         date => (
-                            <div>
+                            <div key={date}>
                                 <span>{date.replace("2020-", "")}:{"  "}</span><span>{"  "}{this.state.userData.progress[date]} Miles</span>
                             </div>
                         )
 
                     )}
                     <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
+                    <br /><br />
+                    <h3>Progress Landmarks: {this.state.marathonName}</h3>
+                    <Achievements miles={this.state.progressTotal} marathon={this.state.userData.marathon} />
+                    <br /><br />
                 </div>
             </div>
         );
