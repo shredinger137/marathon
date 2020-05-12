@@ -29,18 +29,15 @@ export const badgeData = {
             name: "Bridge Roller",
             desc: "Began any marathon."
         },
+
         {
-            mile: 18,
-            image: "costco.png",
-            name: "Shopper",
-            desc: "Reached the Millbrae Costco. Good time to stock up on supplies."
+            mile: 13,
+            image: "treasure.png",
+            name: "Arrrgh!",
+            desc: "Made it to Treasure Island, halfway over the Bay Bridge."
         },
-        {
-            mile: 25,
-            image: "airporter.png",
-            name: "Airporter",
-            desc: "Reached San Francisco International Airport."
-        },
+
+
         {
             mile: 30,
             image: "jailer.png",
