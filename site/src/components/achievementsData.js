@@ -45,6 +45,14 @@ export const badgeData = {
             desc: "Stopped by San Quentin State Prison after crossing the Richmond Bridge."
         },
         {
+            mile: 37,
+            image: "road.png",
+            name: "The Road Warrior",
+            desc: "Got to that part of 580 where it merges with 101, and you ended up going the right direction! Good job!"
+
+        },
+
+        {
             mile: 42,
             image: "finished.png",
             name: "Finisher",
