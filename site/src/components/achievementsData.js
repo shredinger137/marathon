@@ -131,6 +131,12 @@ export const badgeData = {
             desc: "Took a quick coaster break at Six Flags. Definitely a step up from Four Flags."
         },
         {
+            mile: 132,
+            image: "dragonslayer.png",
+            name: "Dragonslayer",
+            desc: "Finished the Dragonslayer quest, freeing Skyrim from this ancient threat... that actually doesn't sound right. It's possible I mixed something up here."
+        },
+        {
             mile: 152,
             image: "tunnel.png",
             name: "Robin Williams Tunnel",
