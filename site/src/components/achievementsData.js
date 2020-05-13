@@ -53,6 +53,14 @@ export const badgeData = {
         },
 
         {
+            mile: 40,
+            image: "heron.png",
+            name: "Shorebird",
+            desc: "The 620-acre Corte Madera Marsh Ecological Reserve has vegetation consisting of cordgrass, pickleweed, salt grass, coyote bush, gum-plant, marsh rosemary, dock, annual grasses and herbs, and various exotic shrub species. Common avian inhabitants include great blue heron, egret, willet, and marbled godwit."
+
+        },
+
+        {
             mile: 42,
             image: "finished.png",
             name: "Finisher",
