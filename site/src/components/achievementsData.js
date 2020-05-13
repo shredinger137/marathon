@@ -36,6 +36,12 @@ export const badgeData = {
             name: "Arrrgh!",
             desc: "Made it to Treasure Island, halfway over the Bay Bridge."
         },
+        {
+            mile: 17,
+            image: "ikea.png",
+            name: "L\u00e4ndenv\u00fcagr",
+            desc: "Stopped by Ikea in Emeryville. Meatballs and furniture, everything you need!"
+        },
 
 
         {
