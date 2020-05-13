@@ -42,7 +42,12 @@ export const badgeData = {
             name: "L\u00e4ndenv\u00fcagr",
             desc: "Stopped by Ikea in Emeryville. Meatballs and furniture, everything you need!"
         },
-
+        {
+            mile: 26,
+            image: "rosietheriveter.png",
+            name: "Riveter",
+            desc: "Visited the Rosie the Riveter Museum."
+        },
 
         {
             mile: 30,
