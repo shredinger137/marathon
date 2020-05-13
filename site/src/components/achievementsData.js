@@ -120,6 +120,18 @@ export const badgeData = {
             desc: "Visited the Rosie the Riveter Museum."
         },
         {
+            mile: 125,
+            image: "coaster.png",
+            name: "Roller Coaster",
+            desc: "Took a quick coaster break at Six Flags. Definitely a step up from Four Flags."
+        },
+        {
+            mile: 152,
+            image: "tunnel.png",
+            name: "Robin Williams Tunnel",
+            desc: "That rainbow arch means you're in the home stretch! Get ready for a view of the finish line when you come out the other side."
+        },
+        {
             mile: 155,
             image: "finished.png",
             name: "Finisher",
