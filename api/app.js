@@ -65,6 +65,20 @@ app.get("/userdata", function (req, res) {
     } else { res.send("Invalid query"); }
 });
 
+app.get("/getallusers", function (req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "text/plain");
+        getAllUserData().then(result => {
+            if(result){
+                res.send(result);
+            } else {
+                res.send("err");
+            }           
+        })
+
+});
+
 app.get("/resend", function (req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -162,7 +176,13 @@ async function getUserData(id) {
     var db = await mongo.connect(mongourl);
     var dbo = db.db("marathon");
     return await dbo.collection("users").findOne({ ID: id });
+}
 
+
+async function getAllUserData(id) {
+    var db = await mongo.connect(mongourl);
+    var dbo = db.db("marathon");
+    return await dbo.collection("users").find().toArray();
 }
 
 

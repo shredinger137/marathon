@@ -56,6 +56,12 @@ export const badgeData = {
             desc: "Stopped by San Quentin State Prison after crossing the Richmond Bridge."
         },
         {
+            mile: 34,
+            image: "masseffect.png",
+            name: "Mission Accomplished",
+            desc: "Complete Mass Effect 2, saving humanity throughout the galaxy from certain annihilation... that actually doesn't sound right. It's possible I mixed something up here."
+        },
+        {
             mile: 37,
             image: "road.png",
             name: "The Road Warrior",
