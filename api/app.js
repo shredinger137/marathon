@@ -180,7 +180,7 @@ function createWelcomeEmail(id){
 
 function sendEmailToUser(emailAddress, subject, content) {
     const mailOptions = {
-        from: config.emailUsername,
+        from: config.emailFrom,
         to: emailAddress,
         subject: subject,
         html: content
