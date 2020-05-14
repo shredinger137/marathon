@@ -99,7 +99,7 @@ class Signup extends React.Component {
           <p>Your dashboard can be found at: <a href={"https://marathon.rrderby.org/dashboard?id=" + this.state.id}>https://marathon.rrderby.org/dashboard?id={this.state.id}</a>. Be sure to save this link.
           </p>
         </div>
-        <div id="error" style={{ display: "none" }}><p>An error occured. Please try again later. If it continues, email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a>.</p></div>
+        <div id="error" style={{ display: "none" }}><p>An error occured. This is most likely because the email address is already in use. For help, email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a>.</p></div>
         <br /><br />
         <img src={route}></img>
         <br /><br />
