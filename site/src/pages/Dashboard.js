@@ -170,7 +170,7 @@ class Dashboard extends React.Component {
                     )}
                     <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
                     <br /><br />
-                    <h3>Progress Landmarks: {this.state.marathonName}</h3>
+                    <h3>Achievements/Landmarks: {this.state.marathonName}</h3>
                     <Achievements miles={this.state.progressTotal} marathon={this.state.userData.marathon} />
                     <br /><br />
                 </div>
