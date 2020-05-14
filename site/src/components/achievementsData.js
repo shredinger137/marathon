@@ -39,7 +39,7 @@ export const badgeData = {
         {
             mile: 17,
             image: "ikea.png",
-            name: "L\u00e4ndenv\u00fcagr",
+            name: "L\u00e4ndenva\u00fcgr",
             desc: "Stopped by Ikea in Emeryville. Meatballs and furniture, everything you need!"
         },
         {
@@ -121,7 +121,7 @@ export const badgeData = {
         {
             mile: 97,
             image: "ikea.png",
-            name: "L\u00e4ndenv\u00fcagr",
+            name: "L\u00e4ndenva\u00fcgr",
             desc: "Stopped by Ikea in Emeryville. Meatballs and furniture, everything you need!"
         },
         {
