@@ -1,7 +1,6 @@
 import React from 'react';
 import '../App.css';
 import '../css/common.css'
-import axios from 'axios';
 import { badgeData } from "./achievementsData.js";
 var route = require('../img/route.jpg');
 

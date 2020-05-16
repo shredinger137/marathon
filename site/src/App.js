@@ -2,8 +2,7 @@ import React from 'react';
 import './App.css';
 import './css/common.css'
 import { Route, Switch, BrowserRouter  } from "react-router-dom";
-import axios from 'axios';
-import { config } from "./config.js";
+import Stats from './pages/Stats';
 import './components/Signup';
 import Signup from './components/Signup';
 import Dashboard from './pages/Dashboard';
@@ -28,6 +27,9 @@ class App extends React.Component {
               <Switch>
                 <Route path="/dashboard">
                   <Dashboard />
+                </Route>
+                <Route path="/stats">
+                  <Stats />
                 </Route>
                 <Route path="/">
                   <Signup />

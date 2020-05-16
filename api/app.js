@@ -132,6 +132,17 @@ app.get("/updatemarathon", function (req, res) {
     } else { res.send("Invalid query"); }
 });
 
+app.get("/getstats", function (req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "text/plain");
+    getStats().then(result => {
+        res.send(result);
+    })
+
+});
+
+
 
 app.get("/updateprogress", function (req, res) {
 
@@ -170,6 +181,50 @@ app.get("/updateprogress", function (req, res) {
     console.log(id + distance + date);
 
 });
+
+function generateStats(){
+    getAllUserData().then(result => {
+        var totalMiles = 0;
+        var userCount = 0;
+        var distanceByDate = {};
+        if(result){
+            //get total miles for all added together
+            for(user of result){
+                userCount += 1;
+                if(user.progress){
+                    for(date in user.progress){
+                        totalMiles += parseFloat(user.progress[date]);
+                        if(distanceByDate[date]){
+                            distanceByDate[date] += parseFloat(user.progress[date]); 
+                        } else {
+                            distanceByDate[date] = parseFloat(user.progress[date]);
+                        }
+
+                    }
+                };
+            }
+            mongo.connect(
+                mongourl,
+                { useNewUrlParser: true, useUnifiedTopology: true },
+                function (err, db) {
+                    if (err) throw err;
+                    var dbo = db.db("marathon");
+                    dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { combinedMiles: totalMiles, totalUsers: userCount, distanceByDate: distanceByDate } }, { upsert: true }, function (err, result) {
+                        if (err) throw err;
+                        else {
+                            console.log("wrote stats");
+                        }
+                        db.close();
+                    }
+                    );
+                });
+        } else { 
+            console.log("err");
+        }           
+    })
+    
+}
+generateStats();
 
 
 async function getUserData(id) {
@@ -226,8 +281,13 @@ async function checkUserData(id, userEmail) {
 }
 
 
-function updateProgress() {
-
+async function getStats() {
+    var db = await mongo.connect(mongourl);
+    var dbo = db.db("marathon");
+    var results = await dbo.collection("stats").find({}).toArray();
+    if (results.length > 0) {
+        return results;
+    } else { return false; }
 }
 
 //TODO: This currently doesn't have any validation, including if users are already signed up.
