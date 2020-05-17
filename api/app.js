@@ -5,6 +5,12 @@ var allowedOrigins = ["https://marathon.rrderby.org", "http://marathon.rrderby.o
 var mongourl = "mongodb://localhost:27017";
 var nodemailer = require("nodemailer");
 var config = require("./config.js");
+var cron = require("node-cron");
+
+cron.schedule("* * * * *", () => {
+    generateStats();
+    console.log("Running cron");
+  });
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
