@@ -19,6 +19,7 @@ class Dashboard extends React.Component {
             marathon: "bridging",
             name: ""
         },
+        progressSorted: [],
         progressTotal: 0,
         progressTotalPercent: 0,
         id: "",
@@ -97,6 +98,9 @@ class Dashboard extends React.Component {
                         progressTotal: total,
                         progressTotalPercent: totalPercent
                     });
+                    var sorted = this.sortDates();
+                    this.setState({progressSorted: sorted});
+                    
                 } else { this.handleNotFound(); }
 
             })
@@ -106,6 +110,24 @@ class Dashboard extends React.Component {
     handleNotFound() {
         document.getElementById("notFound").style.display = "block";
         document.getElementById("updateMilesForm").style.display = "none";
+    }
+
+    sortDates(){
+        var progress = this.state.userData.progress;
+        var sortableArray = [];
+        for(var date in progress){
+            var convertedDate = new Date(this.state.userData.progress[date]);
+            sortableArray.push([date, convertedDate]);
+        }
+        sortableArray.sort(function(a, b){
+            return a[1] - b[1];
+        })
+        for(var date of sortableArray){
+            date[1] = this.state.userData.progress[date[0]];
+            date[0] = date[0].replace("2020-", "");
+        }
+        console.log(sortableArray);
+        return sortableArray;
     }
 
     handleUpdateMarathon(event) {
@@ -160,14 +182,16 @@ class Dashboard extends React.Component {
                         <span>Total: {this.state.progressTotal} / {this.state.marathonDistance}{" "} Miles</span>
                         <br /><br />
                     </div>
-                    {Object.keys(this.state.userData.progress).map(
+                    <table>
+                    {this.state.progressSorted.map(
                         date => (
-                            <div key={date}>
-                                <span>{date.replace("2020-", "")}:{"  "}</span><span>{"  "}{this.state.userData.progress[date]} Miles</span>
-                            </div>
+                            <tr key={date[0]}>
+                                <td><span>{date[0]}:{"  "}</span></td><td><span>{"  "}{date[1]} Miles</span></td>
+                            </tr>
                         )
 
                     )}
+                    </table>
                     <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
                     <br /><br />
                     <h3>Achievements/Landmarks: {this.state.marathonName}</h3>
