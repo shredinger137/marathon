@@ -89,9 +89,10 @@ class Dashboard extends React.Component {
                             document.getElementById("progressText").style.display = "none";
                         }
                     }
-                    else { 
-                        if (document.getElementById("progressText") !== null){
-                            document.getElementById("progressText").style.display = "block"; }
+                    else {
+                        if (document.getElementById("progressText") !== null) {
+                            document.getElementById("progressText").style.display = "block";
+                        }
                     }
 
                     this.setState({
@@ -99,8 +100,8 @@ class Dashboard extends React.Component {
                         progressTotalPercent: totalPercent
                     });
                     var sorted = this.sortDates();
-                    this.setState({progressSorted: sorted});
-                    
+                    this.setState({ progressSorted: sorted });
+
                 } else { this.handleNotFound(); }
 
             })
@@ -112,22 +113,30 @@ class Dashboard extends React.Component {
         document.getElementById("updateMilesForm").style.display = "none";
     }
 
-    sortDates(){
+    //This doesn't work. It doesn't seem to properly sort by the second element.
+    sortDates() {
         var progress = this.state.userData.progress;
         var sortableArray = [];
-        for(var date in progress){
-            var convertedDate = new Date(this.state.userData.progress[date]);
+        for (var date in progress) {
+            var convertedDate = new Date(date).getTime();
             sortableArray.push([date, convertedDate]);
+
         }
-        sortableArray.sort(function(a, b){
-            return a[1] - b[1];
+
+        sortableArray.sort(function (a, b) {
+            if (a[1] === b[1]) {
+                return 0;
+            }
+            else {
+                return (a[1] < b[1]) ? -1 : 1;
+            }
         })
-        for(var date of sortableArray){
+
+        for (var date of sortableArray) {
             date[1] = this.state.userData.progress[date[0]];
             date[0] = date[0].replace("2020-", "");
         }
-        console.log(sortableArray);
-        return sortableArray;
+        return sortableArray.reverse();
     }
 
     handleUpdateMarathon(event) {
@@ -135,19 +144,22 @@ class Dashboard extends React.Component {
         var newMarathonShortname = document.getElementById("marathon").value;
         axios.get(`${config.api}/updatemarathon?user=${this.state.id}&marathon=${newMarathonShortname}`).then(res => {
             this.getID();
-            console.log(res);
         });
     }
 
 
+    openOptionsModal(){
+
+    }
+
     render() {
 
-        console.log(this.state.progressTotal);
+        console.log(this.state.progressSorted);
 
         return (
             <div className="App">
                 <h1>Dashboard</h1>
-                <h3>{this.state.userData.name}</h3>
+                <h3>{this.state.userData.name}<span className="small" onClick={this.openOptionsModal.bind(this)}>{" "}[options]</span></h3>
                 <div>
                     <div id="progress">
                         <div id="progressBar" style={{ width: this.state.progressTotalPercent + "%" }}>
@@ -158,9 +170,11 @@ class Dashboard extends React.Component {
                     <span>Your Marathon: {this.state.marathonName} ({this.state.marathonDistance} miles)</span>
                     <br />
                     <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
-                        <p>Enter the distance you've skated and the date you did it (it should already have today's date) to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
+                        <p className="introText">Enter the distance you've skated and the date you did it (it should already have today's date) to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
+                        <br />
                         <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label>
                         <input id="addMiles"></input>
+                        <br />
                         <label htmlFor="date"><span>Date:{" "}</span></label>
                         <input id="date" type="date"></input>
                         <br />
@@ -183,14 +197,14 @@ class Dashboard extends React.Component {
                         <br /><br />
                     </div>
                     <table>
-                    {this.state.progressSorted.map(
-                        date => (
-                            <tr key={date[0]}>
-                                <td><span>{date[0]}:{"  "}</span></td><td><span>{"  "}{date[1]} Miles</span></td>
-                            </tr>
-                        )
+                        {this.state.progressSorted.map(
+                            date => (
+                                <tr key={date[0]}>
+                                    <td><span>{date[0]}:{"  "}</span></td><td><span>{"  "}{date[1]} Miles</span></td>
+                                </tr>
+                            )
 
-                    )}
+                        )}
                     </table>
                     <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
                     <br /><br />

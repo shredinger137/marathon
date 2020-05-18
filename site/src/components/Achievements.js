@@ -18,7 +18,6 @@ class Achievements extends React.Component {
     }
 
     componentDidUpdate(prevprops, prevstate) {
-        console.log(prevprops);
         if (prevprops.miles != this.props.miles || prevprops.marathon != this.props.marathon) {
             this.getAllBadges();
         }
@@ -34,7 +33,6 @@ class Achievements extends React.Component {
 
     getAllBadges() {
         this.setState({ showNextBadge: false })
-        console.log(this.props);
 
         var gotNextBadge = false;
 
@@ -49,7 +47,7 @@ class Achievements extends React.Component {
         if (this.props.marathon == "fullBay") {
             var list = badgeData.full;
         }
-        console.log(Array.isArray(list));
+     
         if (list && Array.isArray(list) == true) {
             for (var badge of list) {
 

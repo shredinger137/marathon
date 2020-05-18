@@ -109,8 +109,9 @@ tr {
     padding: 15px;
 }
 
-.badgeName {
+.small {
 
+    font-size: 1rem;
 }
 
 .badgeDescription {

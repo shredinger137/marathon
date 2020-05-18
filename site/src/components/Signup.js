@@ -32,7 +32,6 @@ class Signup extends React.Component {
     document.getElementById("error").style.display = "none";
     document.getElementById("emailSent").style.display = "none";
     axios.get(`${config.api}/signup?name=${name}&email=${email}&marathon=${marathon}`).then(res => {
-      console.log(res.data);
       if (res.data == "oop") {
         document.getElementById("error").style.display = "block";
       } else {
@@ -48,6 +47,7 @@ class Signup extends React.Component {
     return (
       <div className="App">
         <div className="introText">
+          <br /><span><a href="/stats">[stats]</a></span>
           <p>Skate the Bay is a virtual skate marathon hosted by <a href="https://rrderby.org" target="_new">Resurrection Roller Derby</a>, open to skaters everywhere. This marathon started
           May 10th, 2020.
           The route comes in three types.
