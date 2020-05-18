@@ -260,14 +260,16 @@ function generateStats() {
                 if (user.progress) {
                     var userTotal = 0;
                     for (date in user.progress) {
-                        if (user.progress.date != null) {
+                        if (user.progress.date != null && parseFloat(user.progress[date]) != null) {
                             userTotal += parseFloat(user.progress[date]);
                             totalMiles += parseFloat(user.progress[date]);
                         }
-                        if (distanceByDate[date] && typeof distanceByDate[date] == "number") {
+                        if (distanceByDate[date] && typeof parseFloat(user.progress[date]) == "number") {
                             distanceByDate[date] += parseFloat(user.progress[date]);
                         } else {
-                            distanceByDate[date] = parseFloat(user.progress[date]);
+                            if (parseFloat(user.progress[date]) != null) {
+                                distanceByDate[date] = parseFloat(user.progress[date]);
+                            }
                         }
 
                     }
