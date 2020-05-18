@@ -275,13 +275,12 @@ function generateStats() {
                         if (typeof milesForDate == "number" && isNaN(milesForDate) == false) {
                             userTotal += milesForDate;
                             totalMiles += milesForDate;
-                            console.log(totalMiles, )
                             if (distanceByDate[date]) {
                                 distanceByDate[date] += milesForDate;
                             } else {
                                 distanceByDate[date] = milesForDate;
                             }
-                        } else {console.log(typeof milesForDate)}
+                        } 
                         updateUserTotal(user.ID, userTotal);
                     }
                 };
