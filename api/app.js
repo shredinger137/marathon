@@ -272,10 +272,9 @@ function generateStats() {
                     var userTotal = 0;
                     for (date in user.progress) {
                         var milesForDate = parseFloat(user.progress[date].replace(/[a-z]|[A-Z]|\s/, ""));
-                        
-
                             userTotal += parseFloat(milesForDate);
                             totalMiles += parseFloat(milesForDate);
+                            console.log(totalMiles + "," + milesForDate);
                             if (distanceByDate[date]) {
                                 distanceByDate[date] += parseFloat(milesForDate);
                             } else {
