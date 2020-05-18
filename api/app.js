@@ -249,10 +249,10 @@ async function createLeaderboardByTotalDistance() {
 }
 
 //We're going to want to come back to this. TODO
-function cleanProgressEntries(){
+function cleanProgressEntries() {
     getAllUserData().then(result => {
-        for(var users in result){
-            for(var date in users.progress){
+        for (var users in result) {
+            for (var date in users.progress) {
 
             }
         }
@@ -272,14 +272,15 @@ function generateStats() {
                     var userTotal = 0;
                     for (date in user.progress) {
                         var milesForDate = parseFloat(user.progress[date].replace(/[a-z]|[A-Z]|\s/, ""));
+                        if (typeof milesForDate == "number") {
                             userTotal += parseFloat(milesForDate);
                             totalMiles += parseFloat(milesForDate);
-                            console.log(totalMiles + "," + milesForDate);
                             if (distanceByDate[date]) {
                                 distanceByDate[date] += parseFloat(milesForDate);
                             } else {
                                 distanceByDate[date] = parseFloat(milesForDate);
-                            }                   
+                            }
+                        }
                         updateUserTotal(user.ID, userTotal);
                     }
                 };
