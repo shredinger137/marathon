@@ -280,7 +280,7 @@ function generateStats() {
                             } else {
                                 distanceByDate[date] = parseFloat(milesForDate);
                             }
-                        }
+                        } else {console.log(typeof milesForDate)}
                         updateUserTotal(user.ID, userTotal);
                     }
                 };
