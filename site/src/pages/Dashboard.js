@@ -159,7 +159,7 @@ class Dashboard extends React.Component {
         return (
             <div className="App">
                 <h1>Dashboard</h1>
-                <h3>{this.state.userData.name}<span className="small" onClick={this.openOptionsModal.bind(this)}>{" "}[options]</span></h3>
+                <h3>{this.state.userData.name}</h3>
                 <div>
                     <div id="progress">
                         <div id="progressBar" style={{ width: this.state.progressTotalPercent + "%" }}>
@@ -169,8 +169,9 @@ class Dashboard extends React.Component {
                     <br />
                     <span>Your Marathon: {this.state.marathonName} ({this.state.marathonDistance} miles)</span>
                     <br />
+                    <br />
                     <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
-                        <p className="introText">Enter the distance you've skated and the date you did it (it should already have today's date) to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
+                        <p className="introText">Enter the distance you've skated and the date to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
                         <br />
                         <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label>
                         <input id="addMiles"></input>
