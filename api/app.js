@@ -260,20 +260,22 @@ function generateStats() {
                 if (user.progress) {
                     var userTotal = 0;
                     for (date in user.progress) {
-                        if (user.progress.date != null && parseFloat(user.progress[date]) != null) {
+                        if (typeof parseFloat(user.progress[date]) == "number") {
+
                             userTotal += parseFloat(user.progress[date]);
                             totalMiles += parseFloat(user.progress[date]);
-                        }
-                        if (distanceByDate[date] && typeof parseFloat(user.progress[date]) == "number") {
-                            distanceByDate[date] += parseFloat(user.progress[date]);
-                        } else {
-                            if (parseFloat(user.progress[date]) != null) {
+                            if (distanceByDate[date]) {
+                                distanceByDate[date] += parseFloat(user.progress[date]);
+                            } else {
                                 distanceByDate[date] = parseFloat(user.progress[date]);
                             }
-                        }
 
+
+                        } else {
+                            console.log("NaN: " + user.progress[date]);
+                        }
+                        updateUserTotal(user.ID, userTotal);
                     }
-                    updateUserTotal(user.ID, userTotal);
                 };
 
             }
@@ -286,7 +288,7 @@ function generateStats() {
                     dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { combinedMiles: totalMiles, totalUsers: userCount, distanceByDate: distanceByDate } }, { upsert: true }, function (err, result) {
                         if (err) throw err;
                         else {
-                            console.log("wrote stats");
+                            //console.log("wrote stats");
                         }
                         db.close();
                     }
