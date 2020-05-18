@@ -9,7 +9,7 @@ var cron = require("node-cron");
 
 cron.schedule("* * * * *", () => {
     generateStats();
-    console.log("Running cron");
+    createLeaderboardByTotalDistance();
 });
 
 var transporter = nodemailer.createTransport({
@@ -20,7 +20,7 @@ var transporter = nodemailer.createTransport({
     }
 });
 
-
+generateStats();
 
 
 //*****************
@@ -40,7 +40,6 @@ app.get("/signup", function (req, res) {
         var marathonSelection = req.query.marathon;
         var id = Math.random().toString(36).slice(2);
         checkUserData(id, userEmail).then(checkResult => {
-            console.log(checkResult);
             if (checkResult == true) {
                 addNewUserToDatabase(userEmail, userDisplayName, marathonSelection, id);
                 var content = createWelcomeEmail(id);
@@ -163,7 +162,7 @@ app.get("/updatePublicOption", function (req, res) {
         function (err, db) {
             if (err) throw err;
             var dbo = db.db("marathon");
-            dbo.collection("users").updateOne({ ID: id }, { $set: { allowPublic: value } }, {upsert: true}, function (err, result) {
+            dbo.collection("users").updateOne({ ID: id }, { $set: { allowPublic: value } }, { upsert: true }, function (err, result) {
                 if (err) throw err;
                 else {
                     res.send("200");
@@ -209,9 +208,45 @@ app.get("/updateprogress", function (req, res) {
                 });
 
         })
-    console.log(id + distance + date);
 
 });
+
+function updateUserTotal(id, total) {
+    mongo.connect(
+        mongourl,
+        { useNewUrlParser: true, useUnifiedTopology: true },
+        function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("marathon");
+            dbo.collection("users").updateOne({ ID: id }, { $set: { totalDistance: total } }, { upsert: true }, function (err, result) {
+                if (err) throw err;
+                db.close();
+            }
+            );
+        });
+}
+createLeaderboardByTotalDistance()
+
+async function createLeaderboardByTotalDistance() {
+    var db = await mongo.connect(mongourl);
+    var dbo = db.db("marathon");
+    var allUsers = await dbo.collection("users").find({allowPublic: "true"}, {projection: {_id: 0, name: 1, totalDistance: 1}}).limit(30).sort({totalDistance: -1}).toArray();
+    mongo.connect(
+        mongourl,
+        { useNewUrlParser: true, useUnifiedTopology: true },
+        function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("marathon");
+            dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
+                if (err) throw err;
+                else {
+                    console.log("wrote stats");
+                }
+                db.close();
+            }
+            );
+        });
+}
 
 function generateStats() {
     getAllUserData().then(result => {
@@ -219,11 +254,13 @@ function generateStats() {
         var userCount = 0;
         var distanceByDate = {};
         if (result) {
-            //get total miles for all added together
+            //get total miles for all added together. Also update individual totals.
             for (user of result) {
                 userCount += 1;
                 if (user.progress) {
+                    var userTotal = 0;
                     for (date in user.progress) {
+                        userTotal += parseFloat(user.progress[date]);
                         totalMiles += parseFloat(user.progress[date]);
                         if (distanceByDate[date]) {
                             distanceByDate[date] += parseFloat(user.progress[date]);
@@ -232,7 +269,9 @@ function generateStats() {
                         }
 
                     }
+                    updateUserTotal(user.ID, userTotal);
                 };
+
             }
             mongo.connect(
                 mongourl,
@@ -255,7 +294,7 @@ function generateStats() {
     })
 
 }
-generateStats();
+
 
 
 async function getUserData(id) {
@@ -265,10 +304,10 @@ async function getUserData(id) {
 }
 
 
-async function getAllUserData(id) {
+async function getAllUserData(query) {
     var db = await mongo.connect(mongourl);
     var dbo = db.db("marathon");
-    return await dbo.collection("users").find().toArray();
+    return await dbo.collection("users").find(query).toArray();
 }
 
 

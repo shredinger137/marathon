@@ -74,6 +74,8 @@ class Dashboard extends React.Component {
                         this.setState({ marathonDistance: 3.4, marathonName: "Mini Marathon" });
                     }
 
+                    document.getElementById("marathon").value = res.data.marathon;
+
                     this.setState({ userData: res.data });
                     var progressArray = [];
                     var total = 0;
@@ -210,7 +212,7 @@ class Dashboard extends React.Component {
                     <br />
                     <form id="updateMarathon" onSubmit={this.handleUpdateMarathon.bind(this)}>
                         <label htmlFor="marathon">Change Marathon: </label>
-                        <select id="marathon" defaultValue={this.state.userData.marathon}>
+                        <select id="marathon">
                             <option value="fullBay">Full Bay (155 miles)</option>
                             <option value="bridging">Bridging (42 miles)</option>
                             <option value="mini">Mini Marathon (3.4 miles)</option>

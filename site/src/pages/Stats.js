@@ -11,7 +11,8 @@ class Stats extends React.Component {
     totalUsers: 0,
     distanceByDate: {},
     distanceGraphData: [],
-    distanceGraphLabels: []
+    distanceGraphLabels: [],
+    leaderboard: []
   };
 
   componentDidMount(){
@@ -31,6 +32,9 @@ class Stats extends React.Component {
         if(statData["totalUsers"]){
             this.setState({totalUsers: statData["totalUsers"]});
         }
+        if(statData["leaderBoardByDistance"]){
+          this.setState({leaderboard: statData["leaderBoardByDistance"]});
+        }
         if(statData["distanceByDate"]){
             this.setState({distanceByDate: statData["distanceByDate"]});
             var allDates = Object.keys(statData["distanceByDate"]);
@@ -45,10 +49,30 @@ class Stats extends React.Component {
 
 
   render() {
+    console.log(this.state.leaderboard);
     return (
       <div className="App">
           <p>Participants: {this.state.totalUsers}</p>
           <p>Combined Miles: {this.state.combinedMiles}</p>
+          <br /><br />
+          <h3>Leaderboards</h3>
+          <span><b>Overall Distance</b></span>
+          <table className="leaderboard">
+            <tbody>
+            {this.state.leaderboard.map(
+                                user => (
+                                  <tr key={user.name}>
+                                    <td>
+                                      <span className="small">{user.name}</span>
+                                    </td>
+                                    <td><span className="small">{user.totalDistance}{" "}Miles</span></td>
+                                  </tr>
+                                )
+
+                            )}
+
+            </tbody>  
+          </table> 
       </div>
     );
   }

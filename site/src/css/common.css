@@ -103,6 +103,14 @@ tr {
 
 }
 
+.leaderboard, .leaderboard tr td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+
+}
+
+
 
 .badgeGrid div {
     border-style: solid;
