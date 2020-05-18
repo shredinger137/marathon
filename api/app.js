@@ -230,7 +230,7 @@ createLeaderboardByTotalDistance()
 async function createLeaderboardByTotalDistance() {
     var db = await mongo.connect(mongourl);
     var dbo = db.db("marathon");
-    var allUsers = await dbo.collection("users").find({allowPublic: "true"}, {projection: {_id: 0, name: 1, totalDistance: 1}}).limit(30).sort({totalDistance: -1}).toArray();
+    var allUsers = await dbo.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
     mongo.connect(
         mongourl,
         { useNewUrlParser: true, useUnifiedTopology: true },
@@ -260,9 +260,11 @@ function generateStats() {
                 if (user.progress) {
                     var userTotal = 0;
                     for (date in user.progress) {
-                        userTotal += parseFloat(user.progress[date]);
-                        totalMiles += parseFloat(user.progress[date]);
-                        if (distanceByDate[date]) {
+                        if (user.progress.date != null) {
+                            userTotal += parseFloat(user.progress[date]);
+                            totalMiles += parseFloat(user.progress[date]);
+                        }
+                        if (distanceByDate[date] && typeof distanceByDate[date] == "number") {
                             distanceByDate[date] += parseFloat(user.progress[date]);
                         } else {
                             distanceByDate[date] = parseFloat(user.progress[date]);
