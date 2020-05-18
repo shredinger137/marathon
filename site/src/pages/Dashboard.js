@@ -178,7 +178,7 @@ class Dashboard extends React.Component {
                     <br />
                     <br />
                     <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
-                        <p className="introText">Enter the distance you've skated and the date to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
+                        <p className="introText">Enter your distance and the date to record progress. Enter a '0' for any date to remove it.</p>
                         <br />
                         <table>
                             <tbody>
