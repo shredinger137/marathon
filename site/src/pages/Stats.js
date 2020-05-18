@@ -55,6 +55,8 @@ class Stats extends React.Component {
           <p>Participants: {this.state.totalUsers}</p>
           <p>Combined Miles: {this.state.combinedMiles}</p>
           <br /><br />
+          <span>Note: this page is very much in development.</span>
+          <br />
           <h3>Leaderboards</h3>
           <span><b>Overall Distance</b></span>
           <table className="leaderboard">
