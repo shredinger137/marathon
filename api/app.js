@@ -10,7 +10,7 @@ var cron = require("node-cron");
 cron.schedule("* * * * *", () => {
     generateStats();
     console.log("Running cron");
-  });
+});
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -62,11 +62,11 @@ app.get("/userdata", function (req, res) {
     if (req && req.query && req.query.user) {
         var id = req.query.user;
         getUserData(id).then(result => {
-            if(result){
+            if (result) {
                 res.send(result);
             } else {
                 res.send("id_not_found");
-            }           
+            }
         })
     } else { res.send("Invalid query"); }
 });
@@ -75,13 +75,13 @@ app.get("/getallusers", function (req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
-        getAllUserData().then(result => {
-            if(result){
-                res.send(result);
-            } else {
-                res.send("err");
-            }           
-        })
+    getAllUserData().then(result => {
+        if (result) {
+            res.send(result);
+        } else {
+            res.send("err");
+        }
+    })
 
 });
 
@@ -98,14 +98,14 @@ app.get("/resend", function (req, res) {
             function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("marathon");
-                dbo.collection("users").findOne({email: email}, function (err, result) {
+                dbo.collection("users").findOne({ email: email }, function (err, result) {
                     if (err) throw err;
                     else {
                         db.close();
                         var content = createWelcomeEmail(result.ID);
                         sendEmailToUser(email, "Skate the Bay Dashboard Link", content);
                         res.send(result.ID);
-                    }         
+                    }
                 }
                 );
             });
@@ -148,7 +148,32 @@ app.get("/getstats", function (req, res) {
 
 });
 
+app.get("/updatePublicOption", function (req, res) {
 
+    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "text/plain");
+
+    var progressData;
+    var id = req.query.user;
+    var value = req.query.value;
+
+    mongo.connect(
+        mongourl,
+        { useNewUrlParser: true, useUnifiedTopology: true },
+        function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("marathon");
+            dbo.collection("users").updateOne({ ID: id }, { $set: { allowPublic: value } }, {upsert: true}, function (err, result) {
+                if (err) throw err;
+                else {
+                    res.send("200");
+                }
+                db.close();
+            }
+            );
+        });
+
+});
 
 app.get("/updateprogress", function (req, res) {
 
@@ -163,7 +188,7 @@ app.get("/updateprogress", function (req, res) {
         .then(data => {
             progressData = data.progress;
             progressData[date] = distance;
-            if(distance == 0){
+            if (distance == 0) {
                 delete progressData[date];
             }
 
@@ -188,20 +213,20 @@ app.get("/updateprogress", function (req, res) {
 
 });
 
-function generateStats(){
+function generateStats() {
     getAllUserData().then(result => {
         var totalMiles = 0;
         var userCount = 0;
         var distanceByDate = {};
-        if(result){
+        if (result) {
             //get total miles for all added together
-            for(user of result){
+            for (user of result) {
                 userCount += 1;
-                if(user.progress){
-                    for(date in user.progress){
+                if (user.progress) {
+                    for (date in user.progress) {
                         totalMiles += parseFloat(user.progress[date]);
-                        if(distanceByDate[date]){
-                            distanceByDate[date] += parseFloat(user.progress[date]); 
+                        if (distanceByDate[date]) {
+                            distanceByDate[date] += parseFloat(user.progress[date]);
                         } else {
                             distanceByDate[date] = parseFloat(user.progress[date]);
                         }
@@ -224,11 +249,11 @@ function generateStats(){
                     }
                     );
                 });
-        } else { 
+        } else {
             console.log("err");
-        }           
+        }
     })
-    
+
 }
 generateStats();
 
@@ -247,7 +272,7 @@ async function getAllUserData(id) {
 }
 
 
-function createWelcomeEmail(id){
+function createWelcomeEmail(id) {
     var content = `<p>Welcome to the Skate the Bay Marathon!</p>
                     <br /><br />
                     <p>Thank you for signing up for Resurrection Roller Derby's Skate the Bay Virtual Marathon. Your unique dashboard link is: <a href="https://marathon.rrderby.org/dashboard?id=${id}">https://marathon.rrderby.org/dashboard?id=${id}</a>. Use this link to view

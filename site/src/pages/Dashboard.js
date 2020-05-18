@@ -95,6 +95,10 @@ class Dashboard extends React.Component {
                         }
                     }
 
+                    if (res.data && res.data.allowPublic && res.data.allowPublic == "true") {
+                        document.getElementById("publicToggle").checked = true;
+                    }
+
                     this.setState({
                         progressTotal: total,
                         progressTotalPercent: totalPercent
@@ -106,6 +110,11 @@ class Dashboard extends React.Component {
 
             })
         } else { console.log("id not found"); }
+    }
+
+    handlePublicOption() {
+        var value = document.getElementById("publicToggle").checked;
+        axios.get(`${config.api}/updatePublicOption?user=${this.state.id}&value=${value}`);
     }
 
     handleNotFound() {
@@ -148,17 +157,15 @@ class Dashboard extends React.Component {
     }
 
 
-    openOptionsModal(){
+    openOptionsModal() {
 
     }
 
     render() {
 
-        console.log(this.state.progressSorted);
-
         return (
             <div className="App">
-                <h1>Dashboard</h1>
+                <h2>Dashboard</h2>
                 <h3>{this.state.userData.name}</h3>
                 <div>
                     <div id="progress">
@@ -173,13 +180,32 @@ class Dashboard extends React.Component {
                     <form id="updateMilesForm" onSubmit={this.handleAddMiles.bind(this)}>
                         <p className="introText">Enter the distance you've skated and the date to update your progress. If you made an entry by mistake, enter a '0' for that date to remove it.</p>
                         <br />
-                        <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label>
-                        <input id="addMiles"></input>
-                        <br />
-                        <label htmlFor="date"><span>Date:{" "}</span></label>
-                        <input id="date" type="date"></input>
-                        <br />
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td style={{ textAlign: "left" }}>
+                                        <label htmlFor="addMiles"><span>Distance (miles):{" "}</span></label>
+                                    </td>
+                                    <td >
+                                        <input id="addMiles"></input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{ textAlign: "left" }}>
+                                        <label htmlFor="date"><span>Date:{" "}</span></label>
+                                    </td>
+                                    <td>
+                                        <input id="date" type="date"></input>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <button type="submit">Submit</button>
+                        <br /><br />
+                        <span className="small">Make my progress public:</span>
+
+                        <input type="checkbox" id="publicToggle" onChange={this.handlePublicOption.bind(this)} />
+
                     </form>
                     <br />
                     <form id="updateMarathon" onSubmit={this.handleUpdateMarathon.bind(this)}>
@@ -192,23 +218,24 @@ class Dashboard extends React.Component {
                         <button type="submit">Save</button>
                     </form>
                     <br />
-                    <br />
                     <div>
                         <span>Total: {this.state.progressTotal} / {this.state.marathonDistance}{" "} Miles</span>
                         <br /><br />
                     </div>
                     <table>
-                        {this.state.progressSorted.map(
-                            date => (
-                                <tr key={date[0]}>
-                                    <td><span>{date[0]}:{"  "}</span></td><td><span>{"  "}{date[1]} Miles</span></td>
-                                </tr>
-                            )
+                        <tbody>
+                            {this.state.progressSorted.map(
+                                date => (
+                                    <tr key={date[0]}>
+                                        <td><span>{date[0]}:{"  "}</span></td><td><span>{"  "}{date[1]} Miles</span></td>
+                                    </tr>
+                                )
 
-                        )}
+                            )}
+                        </tbody>
                     </table>
                     <div id="notFound" style={{ display: "none" }}><p>The requested ID was not found. Please check your email for the correct link, or write to <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> for help.</p></div>
-                    <br /><br />
+                    <br />
                     <h3>Achievements/Landmarks: {this.state.marathonName}</h3>
                     <Achievements miles={this.state.progressTotal} marathon={this.state.userData.marathon} />
                     <br /><br />

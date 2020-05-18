@@ -10,11 +10,6 @@ var route = require('../img/route.jpg');
 //it's not a form component anymore. Oh well.
 
 class Signup extends React.Component {
-  constructor(props) {
-    super(props);
-
-
-  }
 
   state = {
     email: "",
@@ -101,7 +96,7 @@ class Signup extends React.Component {
         </div>
         <div id="error" style={{ display: "none" }}><p>An error occured. This is most likely because the email address is already in use. For help, email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a>.</p></div>
         <br /><br />
-        <img src={route}></img>
+        <img src={route} alt="The Skate the Bay route map"></img>
         <br /><br />
         <p>Having problems? Email <a href="mailto:admin@rrderby.org">admin@rrderby.org</a> or post in our Facebook group to get help.</p>
       </div>

@@ -2,14 +2,8 @@ import React from 'react';
 import '../App.css';
 import '../css/common.css'
 import { badgeData } from "./achievementsData.js";
-var route = require('../img/route.jpg');
-
-
 
 class Achievements extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     state = {
         badges: [],
@@ -74,7 +68,7 @@ class Achievements extends React.Component {
         return (
             <div className="badgeGrid">
                 {this.state.badges.map(badge =>
-                    <div>
+                    <div key={badge.name}>
                         <span className="badgeName">{badge.name}</span><br />
                         <img src={`./badges/${badge.image}`} width="150px" alt={`${badge.name}: ${badge.desc}`}></img>
                         <br />

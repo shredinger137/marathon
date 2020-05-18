@@ -5,11 +5,6 @@ import {config} from '../config';
 import axios from 'axios';
 
 class Stats extends React.Component {
-  constructor(props) {
-    super(props);
-
-
-  }
 
   state = {
     combinedMiles: 0,
