@@ -264,25 +264,21 @@ function generateStats() {
         var totalMiles = 0;
         var userCount = 0;
         var distanceByDate = {};
-        console.log("1");
         if (result) {
             //get total miles for all added together. Also update individual totals.
             for (user of result) {
                 userCount += 1;
                 if (user.progress) {
                     var userTotal = 0;
-                    console.log("2");
                     for (date in user.progress) {
-                        console.log("3");
                         var milesForDate = parseFloat(user.progress[date].replace(/[a-z]|[A-Z]|\s/, ""));
                         if (typeof milesForDate == "number") {
-                            console.log("4");
-                            userTotal += parseFloat(milesForDate);
-                            totalMiles += parseFloat(milesForDate);
+                            userTotal += milesForDate;
+                            totalMiles += milesForDate;
                             if (distanceByDate[date]) {
-                                distanceByDate[date] += parseFloat(milesForDate);
+                                distanceByDate[date] += milesForDate;
                             } else {
-                                distanceByDate[date] = parseFloat(milesForDate);
+                                distanceByDate[date] = milesForDate;
                             }
                         } else {console.log(typeof milesForDate)}
                         updateUserTotal(user.ID, userTotal);
