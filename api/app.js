@@ -228,7 +228,7 @@ function updateUserTotal(id, total) {
 createLeaderboardByTotalDistance()
 
 async function createLeaderboardByTotalDistance() {
-    var db = await mongo.connect(mongourl);
+    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
     var dbo = db.db("marathon");
     var allUsers = await dbo.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
     mongo.connect(
@@ -311,16 +311,18 @@ function generateStats() {
 
 
 async function getUserData(id) {
-    var db = await mongo.connect(mongourl);
+    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
     var dbo = db.db("marathon");
     return await dbo.collection("users").findOne({ ID: id });
 }
 
 
 async function getAllUserData(query) {
-    var db = await mongo.connect(mongourl);
+    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
     var dbo = db.db("marathon");
-    return await dbo.collection("users").find(query).toArray();
+    var data = await dbo.collection("users").find(query).toArray();
+    db.close();
+    return data;
 }
 
 
@@ -355,7 +357,7 @@ function sendEmailToUser(emailAddress, subject, content) {
 
 //TODO: Maybe todo. This doesn't check ID, but it's random enough that I'd be surprised if this became an issue
 async function checkUserData(id, userEmail) {
-    var db = await mongo.connect(mongourl);
+    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
     var dbo = db.db("marathon");
     var results = await dbo.collection("users").find({ email: userEmail }).toArray();
     if (results.length > 0) {
@@ -365,7 +367,7 @@ async function checkUserData(id, userEmail) {
 
 
 async function getStats() {
-    var db = await mongo.connect(mongourl);
+    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
     var dbo = db.db("marathon");
     var results = await dbo.collection("stats").find({}).toArray();
     if (results.length > 0) {
