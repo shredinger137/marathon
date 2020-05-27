@@ -6,6 +6,21 @@ var mongourl = "mongodb://localhost:27017";
 var nodemailer = require("nodemailer");
 var config = require("./config.js");
 var cron = require("node-cron");
+var MongoClient = require('mongodb').MongoClient, Server = require('mongodb').Server;
+
+//Create a global holder for our database instance, then open the database and assign it here.
+//Note that anywhere you use this, you need to have an if(dbConnection){} conditional so that the
+//order will only attempt to run if the database connection exists. Later you might want to add a
+//retry deal to it.
+
+var dbConnection = null;
+MongoClient.connect('mongodb://localhost:27017/', { useUnifiedTopology: true, useNewUrlParser: true }, function (err, client) {
+    if (err) { console.error(err) }
+    dbConnection = client.db('marathon') // once connected, assign the connection to the global variable
+    connectedToDatabase = true;
+    console.log("Connected");
+})
+
 
 cron.schedule("* * * * *", () => {
     generateStats();
@@ -115,6 +130,7 @@ app.get("/updatemarathon", function (req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
+
 
     if (req && req.query && req.query.user && req.query.marathon) {
         var id = req.query.user;
@@ -231,21 +247,16 @@ async function createLeaderboardByTotalDistance() {
     var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
     var dbo = db.db("marathon");
     var allUsers = await dbo.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
-    mongo.connect(
-        mongourl,
-        { useNewUrlParser: true, useUnifiedTopology: true },
-        function (err, db) {
-            if (err) throw err;
-            var dbo = db.db("marathon");
-            dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
-                if (err) throw err;
-                else {
-                    //console.log("wrote stats");
-                }
-                db.close();
-            }
-            );
-        });
+
+    dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
+        if (err) throw err;
+        else {
+            console.log("wrote stats");
+        }
+        db.close();
+    }
+    );
+
 }
 
 //We're going to want to come back to this. TODO
@@ -280,7 +291,7 @@ function generateStats() {
                             } else {
                                 distanceByDate[date] = milesForDate;
                             }
-                        } 
+                        }
                         updateUserTotal(user.ID, userTotal);
                     }
                 };
@@ -313,7 +324,9 @@ function generateStats() {
 async function getUserData(id) {
     var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
     var dbo = db.db("marathon");
-    return await dbo.collection("users").findOne({ ID: id });
+    var data = await dbo.collection("users").findOne({ ID: id });
+    db.close();
+    return data;
 }
 
 
