@@ -106,7 +106,7 @@ app.get("/completed", function (req, res) {
     res.setHeader("Content-Type", "text/plain");
 
     var dbo = dbConnection;
-    dbo.collection("users").find({ totalDistance: {$gte: 155} }, {projection: { _id: 0, name: 1, email: 1, totalDistance: 1 }}).toArray(function (err, result) {
+    dbo.collection("users").find({ totalDistance: { $gte: 155 } }, { projection: { _id: 0, name: 1, email: 1, totalDistance: 1 } }).toArray(function (err, result) {
         if (err) throw err;
         else {
             res.send(result);
@@ -312,23 +312,19 @@ function generateStats() {
                         updateUserTotal(user.ID, userTotal);
                     }
                 };
-
             }
-            mongo.connect(
-                mongourl,
-                { useNewUrlParser: true, useUnifiedTopology: true },
-                function (err, db) {
-                    if (err) throw err;
-                    var dbo = db.db("marathon");
-                    dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { combinedMiles: totalMiles, totalUsers: userCount, distanceByDate: distanceByDate } }, { upsert: true }, function (err, result) {
+            if (dbConnection) {
+
+                dbConnection.collection("stats").updateOne(
+                    { name: "combinedStats" },
+                    { $set: { combinedMiles: totalMiles, totalUsers: userCount, distanceByDate: distanceByDate } },
+                    { upsert: true },
+                    function (err, result) {
                         if (err) throw err;
-                        else {
-                            //console.log("wrote stats");
-                        }
-                        db.close();
                     }
-                    );
-                });
+                );
+            }
+
         } else {
             console.log("err");
         }
@@ -337,22 +333,18 @@ function generateStats() {
 }
 
 
-
 async function getUserData(id) {
-    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
-    var dbo = db.db("marathon");
-    var data = await dbo.collection("users").findOne({ ID: id });
-    db.close();
-    return data;
+    if (dbConnection) {
+        return await dbConnection.collection("users").findOne({ ID: id });
+    }
+
 }
 
 
 async function getAllUserData(query) {
-    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
-    var dbo = db.db("marathon");
-    var data = await dbo.collection("users").find(query).toArray();
-    db.close();
-    return data;
+    if (dbConnection){
+        return await dbConnection.collection("users").find(query).toArray();
+    }
 }
 
 
