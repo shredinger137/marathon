@@ -99,6 +99,23 @@ app.get("/getallusers", function (req, res) {
 
 });
 
+
+app.get("/completed", function (req, res) {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "text/plain");
+
+    var dbo = dbConnection;
+    dbo.collection("users").find({ totalDistance: {$gte: 155} }, {projection: { _id: 0, name: 1, email: 1, totalDistance: 1 }}).toArray(function (err, result) {
+        if (err) throw err;
+        else {
+            res.send(result);
+        }
+    }
+    );
+
+});
+
 app.get("/resend", function (req, res) {
 
     res.header("Access-Control-Allow-Origin", "*");
@@ -337,6 +354,7 @@ async function getAllUserData(query) {
     db.close();
     return data;
 }
+
 
 
 function createWelcomeEmail(id) {
