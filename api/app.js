@@ -232,34 +232,31 @@ app.get("/updateprogress", function (req, res) {
 });
 
 function updateUserTotal(id, total) {
-    mongo.connect(
-        mongourl,
-        { useNewUrlParser: true, useUnifiedTopology: true },
-        function (err, db) {
+    if (dbConnection) {
+
+        dbConnection.collection("users").updateOne({ ID: id }, { $set: { totalDistance: total } }, { upsert: true }, function (err, result) {
             if (err) throw err;
-            var dbo = db.db("marathon");
-            dbo.collection("users").updateOne({ ID: id }, { $set: { totalDistance: total } }, { upsert: true }, function (err, result) {
-                if (err) throw err;
-                db.close();
-            }
-            );
-        });
+        }
+        );
+    }
 }
 createLeaderboardByTotalDistance()
 
 async function createLeaderboardByTotalDistance() {
-    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
-    var dbo = db.db("marathon");
-    var allUsers = await dbo.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
 
-    dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
-        if (err) throw err;
-        else {
-            console.log("wrote stats");
+    if (dbConnection) {
+        var dbo = dbConnection;
+        var allUsers = await dbo.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
+
+        dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
+            if (err) throw err;
+            else {
+                console.log("wrote stats in createLeaderboardByTotalDistance");
+            }
+
         }
-        db.close();
-    }
-    );
+        );
+    } else { console.log("Database unavailable in createLeaderboardByTotalDistance"); }
 
 }
 
