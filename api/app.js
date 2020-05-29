@@ -110,8 +110,7 @@ app.get("/completed", function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
 
-    var dbo = dbConnection;
-    dbo.collection("users").find({ totalDistance: { $gte: 155 } }, { projection: { _id: 0, name: 1, email: 1, totalDistance: 1 } }).toArray(function (err, result) {
+    dbConnection.collection("users").find({ totalDistance: { $gte: 155 } }, { projection: { _id: 0, name: 1, email: 1, totalDistance: 1 } }).toArray(function (err, result) {
         if (err) throw err;
         else {
             res.send(result);
@@ -210,25 +209,17 @@ app.get("/updateprogress", function (req, res) {
             if (distance == 0) {
                 delete progressData[date];
             }
-
-            mongo.connect(
-                mongourl,
-                { useNewUrlParser: true, useUnifiedTopology: true },
-                function (err, db) {
+            if (err) throw err;
+            if (dbConnection) {
+                dbConnection.collection("users").updateOne({ ID: id }, { $set: { progress: progressData } }, function (err, result) {
                     if (err) throw err;
-                    var dbo = db.db("marathon");
-                    dbo.collection("users").updateOne({ ID: id }, { $set: { progress: progressData } }, function (err, result) {
-                        if (err) throw err;
-                        else {
-                            res.send("200");
-                        }
-                        db.close();
+                    else {
+                        res.send("200");
                     }
-                    );
-                });
-
+                }
+                );
+            }
         })
-
 });
 
 function updateUserTotal(id, total) {
@@ -245,10 +236,10 @@ createLeaderboardByTotalDistance()
 async function createLeaderboardByTotalDistance() {
 
     if (dbConnection) {
-        var dbo = dbConnection;
-        var allUsers = await dbo.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
 
-        dbo.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
+        var allUsers = await dbConnection.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
+
+        dbConnection.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
             if (err) throw err;
             else {
                 console.log("wrote stats in createLeaderboardByTotalDistance");
@@ -362,24 +353,24 @@ function sendEmailToUser(emailAddress, subject, content) {
 }
 
 
-//TODO: Maybe todo. This doesn't check ID, but it's random enough that I'd be surprised if this became an issue
+//TODO: Maybe todo. This doesn't check ID, but it's random enough that I'd be surprised if this became an issue.
 async function checkUserData(id, userEmail) {
-    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
-    var dbo = db.db("marathon");
-    var results = await dbo.collection("users").find({ email: userEmail }).toArray();
-    if (results.length > 0) {
-        return false;
-    } else { return true; }
+    if (dbConnection) {
+        var results = await dbConnection.collection("users").find({ email: userEmail }).toArray();
+        if (results.length > 0) {
+            return false;
+        } else { return true; }
+    }
 }
 
 
 async function getStats() {
-    var db = await mongo.connect(mongourl, { useUnifiedTopology: true });
-    var dbo = db.db("marathon");
-    var results = await dbo.collection("stats").find({}).toArray();
-    if (results.length > 0) {
-        return results;
-    } else { return false; }
+    if (dbConnection) {
+        var results = await dbConnection.collection("stats").find({}).toArray();
+        if (results.length > 0) {
+            return results;
+        } else { return false; }
+    }
 }
 
 //TODO: This currently doesn't have any validation, including if users are already signed up.
@@ -396,24 +387,12 @@ function addNewUserToDatabase(userEmail, userDisplayName, marathon, userID, opti
 
     //options not currently implemented, it's a placeholder
     //object for things we might add later 
-
-    mongo.connect(
-        mongourl,
-        { useNewUrlParser: true, useUnifiedTopology: true },
-        function (err, db) {
+    if (dbConnection) {
+        dbConnection.collection("users").insertOne(userData, function (err, result) {
             if (err) throw err;
-            var dbo = db.db("marathon");
-            dbo.collection("users").insertOne(userData, function (err, result) {
-                if (err) throw err;
-                else {
-
-
-                }
-                db.close();
-            }
-            );
-        });
-
+        }
+        );
+    }
 }
 
 
