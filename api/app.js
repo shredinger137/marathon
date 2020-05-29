@@ -209,7 +209,7 @@ app.get("/updateprogress", function (req, res) {
             if (distance == 0) {
                 delete progressData[date];
             }
-            if (err) throw err;
+
             if (dbConnection) {
                 dbConnection.collection("users").updateOne({ ID: id }, { $set: { progress: progressData } }, function (err, result) {
                     if (err) throw err;
