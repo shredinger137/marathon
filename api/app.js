@@ -18,7 +18,12 @@ MongoClient.connect('mongodb://localhost:27017/', { useUnifiedTopology: true, us
     if (err) { console.error(err) }
     dbConnection = client.db('marathon') // once connected, assign the connection to the global variable
     connectedToDatabase = true;
-    console.log("Connected");
+    console.log("Connected to Database");
+
+    //things that happen on startup should happen here, after the database connects
+
+    generateStats();
+    createLeaderboardByTotalDistance();
 })
 
 
@@ -35,7 +40,7 @@ var transporter = nodemailer.createTransport({
     }
 });
 
-generateStats();
+
 
 
 //*****************
@@ -123,23 +128,18 @@ app.get("/resend", function (req, res) {
 
     if (req && req.query && req.query.email) {
         var email = req.query.email;
-        mongo.connect(
-            mongourl,
-            { useNewUrlParser: true, useUnifiedTopology: true },
-            function (err, db) {
+        if (dbConnection) {
+            dbo.collection("users").findOne({ email: email }, function (err, result) {
                 if (err) throw err;
-                var dbo = db.db("marathon");
-                dbo.collection("users").findOne({ email: email }, function (err, result) {
-                    if (err) throw err;
-                    else {
-                        db.close();
-                        var content = createWelcomeEmail(result.ID);
-                        sendEmailToUser(email, "Skate the Bay Dashboard Link", content);
-                        res.send(result.ID);
-                    }
+                else {
+                    var content = createWelcomeEmail(result.ID);
+                    sendEmailToUser(email, "Skate the Bay Dashboard Link", content);
+                    res.send(result.ID);
                 }
-                );
-            });
+            }
+
+            );
+        }
     } else { res.send("Invalid query"); }
 });
 
@@ -148,25 +148,19 @@ app.get("/updatemarathon", function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
 
-
     if (req && req.query && req.query.user && req.query.marathon) {
         var id = req.query.user;
         var marathon = req.query.marathon;
-        mongo.connect(
-            mongourl,
-            { useNewUrlParser: true, useUnifiedTopology: true },
-            function (err, db) {
+        if (dbConnection) {
+            dbConnection.collection("users").updateOne({ ID: id }, { $set: { marathon: marathon } }, function (err, result) {
                 if (err) throw err;
-                var dbo = db.db("marathon");
-                dbo.collection("users").updateOne({ ID: id }, { $set: { marathon: marathon } }, function (err, result) {
-                    if (err) throw err;
-                    else {
-                        res.send("200");
-                    }
-                    db.close();
+                else {
+                    res.send("200");
                 }
-                );
-            });
+            }
+            );
+        }
+
     } else { res.send("Invalid query"); }
 });
 
@@ -185,26 +179,19 @@ app.get("/updatePublicOption", function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.setHeader("Content-Type", "text/plain");
 
-    var progressData;
     var id = req.query.user;
     var value = req.query.value;
-
-    mongo.connect(
-        mongourl,
-        { useNewUrlParser: true, useUnifiedTopology: true },
-        function (err, db) {
+    if (dbConnection) {
+        dbConnection.collection("users").updateOne({ ID: id }, { $set: { allowPublic: value } }, { upsert: true }, function (err, result) {
             if (err) throw err;
-            var dbo = db.db("marathon");
-            dbo.collection("users").updateOne({ ID: id }, { $set: { allowPublic: value } }, { upsert: true }, function (err, result) {
-                if (err) throw err;
-                else {
-                    res.send("200");
-                }
-                db.close();
+            else {
+                res.send("200");
             }
-            );
-        });
-
+        }
+        );
+    } else {
+        console.log("err, db not connected in updatePublicOption")
+    }
 });
 
 app.get("/updateprogress", function (req, res) {
@@ -326,7 +313,7 @@ function generateStats() {
             }
 
         } else {
-            console.log("err");
+            console.log("err, no result in generateStats (has db connected yet?)");
         }
     })
 
@@ -342,7 +329,7 @@ async function getUserData(id) {
 
 
 async function getAllUserData(query) {
-    if (dbConnection){
+    if (dbConnection) {
         return await dbConnection.collection("users").find(query).toArray();
     }
 }
