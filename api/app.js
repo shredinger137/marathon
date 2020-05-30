@@ -237,7 +237,7 @@ async function createLeaderboardByTotalDistance() {
 
     if (dbConnection) {
 
-        var allUsers = await dbConnection.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(30).sort({ totalDistance: -1 }).toArray();
+        var allUsers = await dbConnection.collection("users").find({ allowPublic: "true" }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).limit(50).sort({ totalDistance: -1 }).toArray();
 
         dbConnection.collection("stats").updateOne({ name: "combinedStats" }, { $set: { leaderBoardByDistance: allUsers } }, { upsert: true }, function (err, result) {
             if (err) throw err;
@@ -284,7 +284,7 @@ function generateStats() {
                                 distanceByDate[date] = milesForDate;
                             }
                         }
-                        updateUserTotal(user.ID, userTotal);
+                        updateUserTotal(user.ID, (Math.floor(userTotal * 100)) / 100);
                     }
                 };
             }
