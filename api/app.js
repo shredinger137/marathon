@@ -290,6 +290,8 @@ function generateStats() {
             }
             if (dbConnection) {
 
+                totalMiles = Math.floor(totalMiles * 1000) / 1000;
+
                 dbConnection.collection("stats").updateOne(
                     { name: "combinedStats" },
                     { $set: { combinedMiles: totalMiles, totalUsers: userCount, distanceByDate: distanceByDate } },

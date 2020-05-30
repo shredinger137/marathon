@@ -17,6 +17,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <h1>Skate the Bay</h1>
+        <a href="/stats" style={{margin: "20px"}}>[Stats]</a><a href="/" style={{margin: "20px"}}>[Home]</a>
           <BrowserRouter>
             <div>
               <Switch>

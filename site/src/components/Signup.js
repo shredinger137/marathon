@@ -42,7 +42,7 @@ class Signup extends React.Component {
     return (
       <div className="App">
         <div className="introText">
-          <br /><span><a href="/stats">[stats]</a></span>
+          <br/><br/>
           <p>Skate the Bay is a virtual skate marathon hosted by <a href="https://rrderby.org" target="_new">Resurrection Roller Derby</a>, open to skaters everywhere. This marathon started
           May 10th, 2020.
           The route comes in three types.
@@ -60,16 +60,18 @@ class Signup extends React.Component {
           <br />
             <br />
           To sign up through our site, enter your email and name below, selecting your preferred route. 
-          <br />
+          <br /><br />
           A link to your personal dashboard will be displayed. Make sure to save the link- this is 
           your password, and is how you'll get back in later. You should also get an email link, likely in your spam folder.
           Join our <a href="https://www.facebook.com/groups/193465021655844/" target="_new">Facebook group</a> and tag your photos with #SkateTheBay to share with other participants.
           </p>
         </div>
 
-
+        <br />
         <h1>Sign Up</h1>
-        <p>Enter your email, name (optional) and select your preferred marathon to sign up. The marathon choice can be changed later. You'll get an email with a link to your personal dashboard.</p>
+        <div className="introText">
+        <p>Enter your email, name (optional) and select your preferred marathon to sign up. The marathon choice can be changed later. You'll get an email with a link to your personal dashboard, and the link will be displayed here. Be sure to save it so you can get back.</p>
+        </div>
         <form onSubmit={this.handleSignupSubmit.bind(this)}>
           <label><span> Name:{" "}</span>
             <input type="text" id="name" />
