@@ -122,7 +122,7 @@ export const badgeData = {
             mile: 77.5,
             image: "bonjovi.png",
             name: "We're Halfway There",
-            desc: "Woah, skatin' on a dare; Take my hand, we'll make it I swear; Woah, skatin' on a dare!"
+            desc: "Take my hand, we'll make it I swear; Woah, skatin' on a dare!"
         },
         {
             mile: 97,
@@ -140,7 +140,7 @@ export const badgeData = {
             mile: 125,
             image: "coaster.png",
             name: "Roller Coaster",
-            desc: "Took a quick coaster break at Six Flags. Definitely a step up from Four Flags."
+            desc: "Took a quick coaster break at Six Flags with the other roller coaster junkies."
         },
         {
             mile: 132,
