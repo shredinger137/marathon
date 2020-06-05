@@ -119,6 +119,12 @@ export const badgeData = {
             desc: "Went to the railroad ghost town of Drawbridge."
         },
         {
+            mile: 77.5,
+            image: "bonjovi.png",
+            name: "We're Halfway There",
+            desc: "Woah, skatin' on a dare; Take my hand, we'll make it I swear; Woah, skatin' on a dare!"
+        },
+        {
             mile: 97,
             image: "ikea.png",
             name: "L\u00e4ndenva\u00fcgr",
