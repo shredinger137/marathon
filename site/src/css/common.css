@@ -3,6 +3,32 @@ p, span, h1, h2, h3, h4, button, label {
     font-family: Merriweather,sans-serif;
 }
 
+.statsWrapper {
+    margin: 0 auto;
+    width: 80vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: 900px) {
+.statsWrapper {
+    width: 100vw;
+}
+
+.statsWrapper div {
+    padding: 10px;
+}
+
+}
+
+.statsWrapper div {
+    margin: 0 auto;
+}
+
+.statsWrapper div table {
+    margin: 0 auto;
+}
+
 p, span {
     font-size: 1.2rem;
 }
