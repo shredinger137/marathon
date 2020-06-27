@@ -12,7 +12,8 @@ class Stats extends React.Component {
     distanceByDate: {},
     distanceGraphData: [],
     distanceGraphLabels: [],
-    leaderboard: []
+    leaderboard: [],
+    completedFull: []
   };
 
   componentDidMount(){
@@ -22,10 +23,17 @@ class Stats extends React.Component {
   getStats(){
     axios.get(`${config.api}/getstats`).then(res => {
         var statData;
+        var completedData;
         var graphData = [];
         if(res && res.data && res.data[0]){
             statData = res.data[0];
         }
+        //This is super ugly and should probably be rethought.
+        if(res && res.data && res.data[1]){
+          completedData = res.data[1];
+          console.log(completedData["completedFullMarathon"]);
+        }
+
         if(statData["combinedMiles"]){
             this.setState({combinedMiles: statData["combinedMiles"]});
         }
@@ -34,6 +42,11 @@ class Stats extends React.Component {
         }
         if(statData["leaderBoardByDistance"]){
           this.setState({leaderboard: statData["leaderBoardByDistance"]});
+          console.log(statData["leaderBoardByDistance"])
+        }
+        if(completedData && completedData["completedFullMarathon"]){
+          this.setState({completedFull: completedData["completedFullMarathon"]});
+          console.log(completedData["completedFullMarathon"]);
         }
         if(statData["distanceByDate"]){
             this.setState({distanceByDate: statData["distanceByDate"]});
@@ -49,13 +62,11 @@ class Stats extends React.Component {
 
 
   render() {
-    console.log(this.state.leaderboard);
     return (
       <div className="App">
-          <p>Participants: {this.state.totalUsers}</p>
-          <p>Combined Miles: {this.state.combinedMiles}</p>
-          <br /><br />
-          <span>Note: this page is very much in development.</span>
+          <p>Participants: <strong>{this.state.totalUsers}</strong>
+          <br />
+          Combined Miles: <strong>{this.state.combinedMiles}</strong></p>
           <br />
           <h3>Leaderboards</h3>
           <span><b>Overall Distance</b></span>
@@ -64,6 +75,27 @@ class Stats extends React.Component {
             {this.state.leaderboard.map(
                                 user => (
                                   <tr key={user.name}>
+                                    <td>
+                                      <span className="small">{user.name}</span>
+                                    </td>
+                                    <td><span className="small">{user.totalDistance}{" "}Miles</span></td>
+                                  </tr>
+                                )
+
+                            )}
+
+            </tbody>  
+          </table> 
+          <br /><br />
+          <span><b>Hall of Heroes</b></span>
+          <br />
+          <span><i>These brave skaters have completed or surpassed the challenge of the Full Bay Marathon.</i></span>
+          <br /><br />
+          <table className="leaderboard">
+            <tbody>
+            {this.state.completedFull.map(
+                                user => (
+                                  <tr key={user.name + 'completed'}>
                                     <td>
                                       <span className="small">{user.name}</span>
                                     </td>

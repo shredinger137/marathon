@@ -24,12 +24,14 @@ MongoClient.connect('mongodb://localhost:27017/', { useUnifiedTopology: true, us
 
     generateStats();
     createLeaderboardByTotalDistance();
+    createListOfCompleted();
 })
 
 
 cron.schedule("* * * * *", () => {
     generateStats();
     createLeaderboardByTotalDistance();
+    createListOfCompleted();
 });
 
 var transporter = nodemailer.createTransport({
@@ -231,7 +233,7 @@ function updateUserTotal(id, total) {
         );
     }
 }
-createLeaderboardByTotalDistance()
+
 
 async function createLeaderboardByTotalDistance() {
 
@@ -250,6 +252,26 @@ async function createLeaderboardByTotalDistance() {
     } else { console.log("Database unavailable in createLeaderboardByTotalDistance"); }
 
 }
+
+async function createListOfCompleted() {
+
+    if (dbConnection) {
+
+        var completedUsers = await dbConnection.collection("users").find({ allowPublic: "true", totalDistance: { $gte: 155 }  }, { projection: { _id: 0, name: 1, totalDistance: 1 } }).toArray();
+
+        dbConnection.collection("stats").updateOne({ name: "completedFull" }, { $set: { completedFullMarathon: completedUsers } }, { upsert: true }, function (err, result) {
+            if (err) throw err;
+            else {
+                console.log("wrote stats in createListOfCompleted");
+            }
+
+        }
+        );
+    } else { console.log("Database unavailable in createListOfCompleted"); }
+
+}
+
+
 
 //We're going to want to come back to this. TODO
 function cleanProgressEntries() {
@@ -284,6 +306,7 @@ function generateStats() {
                                 distanceByDate[date] = milesForDate;
                             }
                         }
+                        console.log(user.name + " " + (Math.floor(userTotal * 100)) / 100)
                         updateUserTotal(user.ID, (Math.floor(userTotal * 100)) / 100);
                     }
                 };
