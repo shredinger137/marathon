@@ -59,7 +59,7 @@ class Signup extends React.Component {
           to find yours.
           <br />
             <br />
-          To sign up through our site, enter your email and name below, selecting your preferred route. 
+          <b>Signups are now closed, as of 8/3/2020. Follow our <a href="https://www.facebook.com/rrderby" target="_new">Facebook</a> page if you'd like to see updates on marathon we may host in the future.</b>
           <br /><br />
           A link to your personal dashboard will be displayed. Make sure to save the link- this is 
           your password, and is how you'll get back in later. You should also get an email link, likely in your spam folder.
@@ -68,28 +68,6 @@ class Signup extends React.Component {
         </div>
 
         <br />
-        <h1>Sign Up</h1>
-        <div className="introText">
-        <p>Enter your email, name (optional) and select your preferred marathon to sign up. The marathon choice can be changed later. You'll get an email with a link to your personal dashboard, and the link will be displayed here. Be sure to save it so you can get back.</p>
-        </div>
-        <form onSubmit={this.handleSignupSubmit.bind(this)}>
-          <label><span> Name:{" "}</span>
-            <input type="text" id="name" />
-          </label>
-          <br />
-          <label> <span>Email:{" "}</span>
-            <input type="email" id="email"></input>
-          </label>
-          <br />
-          <label><span>Marathon:{" "}</span>
-            <select id="marathon" defaultValue="bridging">
-              <option value="fullBay">Full Bay (155 miles)</option>
-              <option value="bridging">Bridging (42 miles)</option>
-              <option value="mini">Mini Marathon (3.4 miles)</option>
-            </select></label>
-          <br /><br />
-          <input type="submit" value="Submit" />
-        </form>
         <br />
         <br />
         <div id="emailSent" style={{ display: "none" }}><p>Your registration was received. Please check your email, {this.state.email}, for a confirmation and link to your dashboard.</p>
